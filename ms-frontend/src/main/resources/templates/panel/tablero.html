@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Tablero')}"></head>
+<body class="sgp-panel-body">
+<div class="d-lg-flex min-vh-100">
+    <th:block th:replace="~{fragments/layout :: menuPanel('tablero')}"></th:block>
+    <main class="flex-grow-1 sgp-main">
+
+        <div class="sgp-saludo">
+            <div>
+                <h1 th:text="'Hola, ' + ${#strings.capitalize(#strings.substringBefore(#authentication.name, '@'))}">Hola, Admin</h1>
+                <p th:if="${porAtender > 0}" th:text="'Tienes ' + ${porAtender} + (${porAtender == 1} ? ' solicitud' : ' solicitudes') + ' por atender.'">Tienes 3 solicitudes por atender.</p>
+                <p th:unless="${porAtender > 0}">No hay solicitudes por atender en este momento.</p>
+            </div>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <span class="sgp-fecha"><i class="bi bi-calendar3"></i><span th:text="${hoy}">Martes 28 de octubre</span></span>
+                <a class="btn btn-primary" th:href="@{/panel/solicitudes}">Ver solicitudes</a>
+            </div>
+        </div>
+
+        <section class="sgp-kpis" aria-label="Resumen de solicitudes">
+            <article class="sgp-k ambar">
+                <div class="cab"><span>Por atender</span><span class="ico"><i class="bi bi-bell"></i></span></div>
+                <span class="num" th:text="${porAtender}" th:data-count="${porAtender}">0</span>
+                <span class="pie">Registradas y pendientes de evaluación</span>
+            </article>
+            <article class="sgp-k">
+                <div class="cab"><span>En curso</span><span class="ico"><i class="bi bi-tools"></i></span></div>
+                <span class="num" th:text="${enCurso}" th:data-count="${enCurso}">0</span>
+                <span class="pie">Cotizadas, aprobadas, programadas o en ejecución</span>
+            </article>
+            <article class="sgp-k">
+                <div class="cab"><span>Cerradas</span><span class="ico"><i class="bi bi-check2-circle"></i></span></div>
+                <span class="num" th:text="${cerradas}" th:data-count="${cerradas}">0</span>
+                <span class="pie">Con conformidad del cliente</span>
+            </article>
+            <article class="sgp-k">
+                <div class="cab"><span>Total</span><span class="ico"><i class="bi bi-clipboard-data"></i></span></div>
+                <span class="num" th:text="${total}" th:data-count="${total}">0</span>
+                <span class="pie">Solicitudes registradas</span>
+            </article>
+        </section>
+
+        <section class="sgp-box plana mb-4" aria-labelledby="t-cola">
+            <div class="sgp-box-cab">
+                <div>
+                    <h2 id="t-cola">Orden de atención</h2>
+                    <p class="sub mb-0">Se atiende primero la prioridad más alta; si empatan, la que llegó antes.</p>
+                </div>
+                <a class="btn btn-outline-dark btn-sm" th:href="@{/panel/solicitudes}">Ver todas</a>
+            </div>
+            <div class="sgp-cola-cuerpo" th:unless="${#lists.isEmpty(cola)}">
+                <article class="sgp-turno primero" th:with="p=${cola[0].s}"
+                         th:classappend="${p.urgencia != null} ? 'ur-' + ${#strings.toLowerCase(p.urgencia.name())}">
+                    <span class="sgp-turno-etq">Atender ahora</span>
+                    <div class="sgp-turno-datos">
+                        <h3 th:text="${p.solicitante()}">Cliente</h3>
+                        <p><span th:text="${p.categoria != null} ? ${p.categoria.etiqueta} : ''">Servicio</span>
+                           <span th:if="${p.direccionServicio != null and !#strings.isEmpty(p.direccionServicio)}" th:text="'· ' + ${p.direccionServicio}"></span></p>
+                    </div>
+                    <div class="sgp-turno-meta">
+                        <span class="sgp-pill" th:if="${p.urgencia != null}" th:text="'Prioridad ' + ${#strings.toLowerCase(p.urgencia.etiqueta)}">Prioridad alta</span>
+                        <span class="sgp-pill" th:if="${p.estado != null}" th:classappend="'st-' + ${#strings.toLowerCase(p.estado.name())}" th:text="${p.estado.etiqueta}">Registrada</span>
+                        <span><i class="bi bi-clock me-1"></i><span th:text="${@tiempo.hace(p.fechaCreacion)}">hace 2 h</span></span>
+                        <span th:text="${p.codigo}">SOL-000001</span>
+                        <span class="sgp-foto-chip" th:if="${p.fotos > 0}"><i class="bi bi-camera"></i><span th:text="${p.fotos} + (${p.fotos == 1} ? ' foto' : ' fotos')">2 fotos</span></span>
+                    </div>
+                    <div class="sgp-turno-acciones">
+                        <a class="btn btn-primary" th:href="@{/panel/solicitudes/{id}(id=${p.id})}">Ver los datos</a>
+                        <form th:if="${p.estado != null and p.estado.name() == 'REGISTRADA'}" sec:authorize="hasAnyRole('ADMINISTRADOR','COORDINADOR')"
+                              th:action="@{/panel/solicitudes/{id}/estado(id=${p.id})}" method="post">
+                            <input type="hidden" name="estado" value="PENDIENTE_EVALUACION">
+                            <input type="hidden" name="volver" value="tablero">
+                            <button class="btn btn-outline-light" type="submit">Empezar evaluación</button>
+                        </form>
+                    </div>
+                </article>
+                <ol class="sgp-turnos" th:if="${#lists.size(cola) > 1}" start="2">
+                    <li th:each="t : ${cola}" th:unless="${t.posicion == 1}">
+                        <span class="sgp-pos" th:text="${t.posicion}">2</span>
+                        <span class="sgp-turno-quien">
+                            <strong th:text="${t.s.solicitante()}">Cliente</strong>
+                            <small><span th:text="${t.s.categoria != null} ? ${t.s.categoria.etiqueta} : ''">Servicio</span><span class="sgp-foto-chip" th:if="${t.s.fotos > 0}" th:title="${t.s.fotos} + ' foto(s) del cliente'"><i class="bi bi-camera"></i><span th:text="${t.s.fotos}">2</span></span></small>
+                        </span>
+                        <span class="sgp-pill" th:if="${t.s.urgencia != null}" th:classappend="'ur-' + ${#strings.toLowerCase(t.s.urgencia.name())}" th:text="${t.s.urgencia.etiqueta}">Media</span>
+                        <span class="sgp-turno-espera" th:text="${@tiempo.hace(t.s.fechaCreacion)}">hace 3 h</span>
+                        <a class="btn btn-outline-dark btn-sm" th:href="@{/panel/solicitudes/{id}(id=${t.s.id})}"
+                           th:attr="aria-label='Ver los datos de ' + ${t.s.codigo}">Ver</a>
+                    </li>
+                </ol>
+                <p class="small text-muted mb-0" th:if="${enCola > #lists.size(cola)}"
+                   th:text="'Hay ' + ${enCola - #lists.size(cola)} + ' más en espera.'">Hay 3 más en espera.</p>
+            </div>
+            <div class="sgp-vacio" th:if="${#lists.isEmpty(cola)}">
+                <i class="bi bi-check2-all"></i>
+                <strong>No hay solicitudes por atender</strong>
+                Cuando un cliente use el formulario de Contacto, aparecerá aquí con su prioridad.
+            </div>
+        </section>
+
+        <section class="sgp-box mb-4" aria-labelledby="t-etapas">
+            <h2 id="t-etapas">Etapa de cada solicitud</h2>
+            <p class="sub" th:text="${total == 0} ? 'Cuando lleguen solicitudes, aquí verás en qué etapa está cada una.' : 'Cada tramo es una etapa; su largo depende de cuántas solicitudes hay en ella.'">Cada tramo es una etapa.</p>
+            <div class="sgp-tuberia" data-tuberia th:classappend="${total == 0} ? 'vacia'" role="img"
+                 th:aria-label="${total} + ' solicitudes repartidas por etapa'">
+                <span class="seg" th:each="e : ${resumen}" th:classappend="'st-' + ${#strings.toLowerCase(e.key.name())}"
+                      th:data-valor="${e.value}" th:title="${e.key.etiqueta} + ': ' + ${e.value}"></span>
+            </div>
+            <ul class="sgp-etapas">
+                <li th:each="e : ${resumen}" th:classappend="'st-' + ${#strings.toLowerCase(e.key.name())}">
+                    <span th:text="${e.key.etiqueta}">Estado</span><b th:text="${e.value}">0</b>
+                </li>
+            </ul>
+        </section>
+
+        <div class="sgp-rejilla">
+            <section class="sgp-box" aria-labelledby="t-serv">
+                <h2 id="t-serv">Servicios más pedidos</h2>
+                <p class="sub">Cantidad de solicitudes por tipo de servicio.</p>
+                <div class="sgp-hbar" th:each="c : ${categorias}" th:classappend="${c.tope} ? 'tope'">
+                    <span th:text="${c.etiqueta}">Servicio</span>
+                    <span class="pista" aria-hidden="true"><i th:data-pct="${c.pct}"></i></span>
+                    <b th:text="${c.valor}">0</b>
+                </div>
+            </section>
+
+            <section class="sgp-box" aria-labelledby="t-urg">
+                <h2 id="t-urg">Prioridad</h2>
+                <p class="sub">Con qué prioridad piden atención.</p>
+                <div class="sgp-dona-caja">
+                    <div class="sgp-dona-marco">
+                        <svg class="sgp-dona" viewBox="0 0 42 42" aria-hidden="true"
+                             th:data-segs="${urgencias[0].valor} + ',' + ${urgencias[1].valor} + ',' + ${urgencias[2].valor}"
+                             th:data-clases="${urgencias[0].clase} + ',' + ${urgencias[1].clase} + ',' + ${urgencias[2].clase}"></svg>
+                        <div class="sgp-dona-centro"><b th:text="${total}">0</b><span>solicitudes</span></div>
+                    </div>
+                    <ul class="sgp-leyenda">
+                        <li th:each="u : ${urgencias}" th:classappend="${u.clase}"><span th:text="${u.etiqueta}">Alta</span><b th:text="${u.valor}">0</b></li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </main>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+<script th:src="@{/js/panel.js}" defer></script>
+</body>
+</html>

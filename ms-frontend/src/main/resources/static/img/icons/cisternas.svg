@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Cisternas y tanques">
+  <rect width="64" height="64" rx="16" fill="#e6f1f8"/>
+  <path d="M16 20c0-4 7-6 16-6s16 2 16 6v24c0 4-7 6-16 6s-16-2-16-6z" fill="#0b3c5d"/>
+  <ellipse cx="32" cy="20" rx="16" ry="6" fill="#2b8fc7"/>
+  <path d="M16 34c5 4 11 4 16 0s11-4 16 0" fill="none" stroke="#f5a02a" stroke-width="4" stroke-linecap="round"/>
+  <path d="M16 43c5 4 11 4 16 0s11-4 16 0" fill="none" stroke="#7fd3ff" stroke-width="4" stroke-linecap="round"/>
+</svg>

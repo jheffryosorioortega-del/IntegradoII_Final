@@ -1,0 +1,35 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: ms-usuarios
+  config:
+    # Las claves de las bases de datos se leen de un archivo .env (no se sube a GitHub).
+    import:
+      - optional:file:./.env[.properties]
+      - optional:file:../.env[.properties]
+
+  # Todo el sistema usa un solo motor: PostgreSQL. Cada microservicio tiene su propia base.
+  # Host y puerto salen de SGP_DB_HOST y SGP_DB_PORT (.env); por defecto localhost:5432.
+  datasource:
+    url: jdbc:postgresql://${SGP_DB_HOST:localhost}:${SGP_DB_PORT:5432}/${USUARIOS_DB_NAME:sgp_usuarios}
+    username: ${USUARIOS_DB_USER:sgp_usuarios_app}
+    password: ${USUARIOS_DB_PASSWORD}
+  jpa:
+    hibernate:
+      # El esquema lo crea Flyway; Hibernate solo comprueba que coincida con las entidades.
+      ddl-auto: ${JPA_DDL_AUTO:validate}
+    open-in-view: false
+  flyway:
+    locations: classpath:db/migration/postgresql
+
+# El secreto con el que se firman los JWT es SGP_JWT_SECRET (.env, igual que en el Gateway).
+sgp:
+  jwt:
+    # Cuánto dura un token. La sesión del Front-End caduca antes (30 min sin actividad).
+    vigencia-horas: 8
+  # Contraseña de los 3 usuarios iniciales que crea DataLoader si la tabla está vacía. Sale de SGP_SEED_PASSWORD
+  # (.env); no se escribe aquí para que no quede en el código ni en GitHub.
+  seed:
+    password: ${SGP_SEED_PASSWORD:}

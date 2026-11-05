@@ -1,0 +1,281 @@
+/* ===================================================================
+   SGP - Panel interno (Tablero, Solicitudes, Clientes)
+   Colores de la marca: tinta, ámbar y azul. Se carga después de site.css.
+   =================================================================== */
+:root {
+    --sgp-fondo-panel: #edf1f5;
+    --sgp-grafito: #22262c;
+    --sgp-linea: #e3e9ef;
+    --sgp-texto-suave: #52606d;
+    /* Etapas: del gris (recién llegó) al naranja (hay que moverse) y al azul (en marcha); verde al cerrar. */
+    --st-registrada: #8fa3bc;
+    --st-pendiente_evaluacion: #f47216;
+    --st-cotizada: #ffa04d;
+    --st-aprobada: #6fa8dc;
+    --st-programada: #2f63a3;
+    --st-en_ejecucion: #15294a;
+    --st-cerrada: #2e8b57;
+}
+/* ---------- Paleta del panel: el naranja y el azul del logo ----------
+   Naranja #f47216 (texto oscuro encima, contraste AA) y azul eléctrico #2f63a3; azul noche #15294a para fondos y texto.
+   Solo cambia dentro del panel: el sitio público conserva su propia paleta. */
+.sgp-panel-body {
+    --sgp-tinta: #15294a;
+    --sgp-tinta-2: #2f63a3;
+    --sgp-azul: #2f63a3;
+    --sgp-acento: #f47216;
+    --sgp-acento-2: #ffb57a;
+    --sgp-acento-texto: #b5440a;
+    --sgp-fondo-panel: #eaf0f8;
+    --sgp-linea: #dce5f1;
+    --sgp-texto-suave: #4a5d78;
+}
+.sgp-panel-body .btn-primary {
+    --bs-btn-color: #15294a; --bs-btn-hover-color: #15294a; --bs-btn-active-color: #15294a; --bs-btn-disabled-color: #15294a;
+    --bs-btn-bg: #f47216; --bs-btn-border-color: #f47216;
+    --bs-btn-hover-bg: #ff8a33; --bs-btn-hover-border-color: #ff8a33;
+    --bs-btn-active-bg: #db5f08; --bs-btn-active-border-color: #db5f08;
+    --bs-btn-disabled-bg: #f47216; --bs-btn-disabled-border-color: #f47216;
+    --bs-btn-focus-shadow-rgb: 244, 114, 22;
+}
+.sgp-panel-body .btn-outline-dark {
+    --bs-btn-color: #15294a; --bs-btn-border-color: #15294a;
+    --bs-btn-hover-bg: #15294a; --bs-btn-hover-border-color: #15294a; --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: #15294a; --bs-btn-active-border-color: #15294a; --bs-btn-active-color: #fff;
+    --bs-btn-focus-shadow-rgb: 8, 40, 88;
+}
+.sgp-panel-body .form-control:focus, .sgp-panel-body .form-select:focus {
+    border-color: #f47216; box-shadow: 0 0 0 .25rem rgba(244, 114, 22, .3);
+}
+.sgp-panel-body main a:not(.btn):not(.sgp-filtro) { color: var(--sgp-azul); }
+.sgp-panel-body { background: var(--sgp-fondo-panel); }
+
+/* ---------- Estados y urgencias: un color por cada uno ---------- */
+.st-registrada { --c: var(--st-registrada); }
+.st-pendiente_evaluacion { --c: var(--st-pendiente_evaluacion); }
+.st-cotizada { --c: var(--st-cotizada); }
+.st-aprobada { --c: var(--st-aprobada); }
+.st-programada { --c: var(--st-programada); }
+.st-en_ejecucion { --c: var(--st-en_ejecucion); }
+.st-cerrada { --c: var(--st-cerrada); }
+.ur-alta { --c: #c8372d; }
+.ur-media { --c: #f47216; }
+.ur-baja { --c: #2e8b57; }
+.sgp-pill {
+    display: inline-flex; align-items: center; gap: .45rem; padding: .22rem .7rem .22rem .55rem; border-radius: 999px;
+    font-size: .82rem; font-weight: 700; color: #1f2933; white-space: nowrap;
+    background: color-mix(in srgb, var(--c) 15%, #fff);
+}
+.sgp-pill::before { content: ""; width: .55rem; height: .55rem; border-radius: 50%; background: var(--c); }
+
+/* ---------- Barra lateral ---------- */
+.sgp-rail { --bs-offcanvas-width: 280px; --bs-offcanvas-bg: var(--sgp-tinta); --bs-offcanvas-color: #fff;
+            --bs-nav-pills-link-active-bg: var(--sgp-acento); --bs-nav-pills-link-active-color: var(--sgp-tinta); }
+.sgp-rail.offcanvas-lg { background-color: var(--sgp-tinta) !important; }
+.sgp-rail .nav-link { display: flex; align-items: center; gap: .85rem; color: #d3e0f2; font-weight: 700; padding: .8rem 1rem; border-radius: 16px; }
+.sgp-rail .nav-link .bi { font-size: 1.25rem; line-height: 1; }
+.sgp-rail .nav-link:hover:not(.active) { background: rgba(255, 255, 255, .09); color: #fff; }
+.sgp-rail .nav-link:focus-visible, .sgp-salir:focus-visible, .sgp-marca:focus-visible { outline: 3px solid var(--sgp-acento-2); outline-offset: 2px; }
+.sgp-marca {
+    display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; margin-bottom: 1.5rem;
+    border-radius: 18px; background: #fff; text-decoration: none; box-shadow: 0 0 0 3px rgba(244, 114, 22, .7);
+}
+.sgp-marca img { width: 40px; height: 40px; display: block; }
+.sgp-marca:hover { box-shadow: 0 0 0 3px var(--sgp-acento-2); }
+.sgp-marca-mini { width: 30px; height: 30px; background: #fff; border-radius: 9px; padding: 2px; }
+.sgp-rail-pie { margin-top: auto; padding-top: 1.5rem; display: flex; flex-direction: column; gap: .75rem; font-size: .85rem; color: #c7d6ea; }
+.sgp-salir {
+    display: flex; align-items: center; gap: .85rem; width: 100%; padding: .8rem 1rem; border: 0; border-radius: 16px;
+    background: rgba(255, 255, 255, .07); color: #fff; font-weight: 700; text-align: left;
+}
+.sgp-salir:hover { background: rgba(255, 255, 255, .15); }
+.sgp-salir .bi { font-size: 1.25rem; }
+.sgp-topbar { background: var(--sgp-tinta); }
+.sgp-topbar .sgp-marca-chica { font-family: var(--sgp-font-titulo); font-weight: 800; color: var(--sgp-acento); letter-spacing: .5px; }
+
+@media (min-width: 992px) {
+    .sgp-rail {
+        flex: 0 0 96px; position: sticky; top: 16px; height: calc(100vh - 32px); margin: 16px 0 16px 16px;
+        border-radius: 28px; background: var(--sgp-tinta); overflow: hidden;
+    }
+    .sgp-rail .offcanvas-body { align-items: center; padding: 1.25rem .5rem; }
+    .sgp-rail .nav { gap: .5rem; width: 100%; align-items: center; }
+    .sgp-rail .nav-link { flex-direction: column; justify-content: center; gap: .3rem; width: 74px; padding: .7rem 0 .55rem; font-size: .72rem; border-radius: 18px; }
+    .sgp-rail .nav-link .bi { font-size: 1.35rem; }
+    .sgp-rail-pie { width: 100%; align-items: center; }
+    .sgp-rail-pie .sgp-usuario span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .sgp-salir { flex-direction: column; justify-content: center; gap: .3rem; width: 74px; padding: .7rem 0 .55rem; font-size: .72rem; text-align: center; border-radius: 18px; }
+    .sgp-salir .bi { font-size: 1.35rem; }
+}
+.sgp-usuario { display: flex; align-items: center; gap: .6rem; word-break: break-all; }
+.sgp-usuario .bi { font-size: 1.35rem; color: #fff; }
+
+/* ---------- Contenido ---------- */
+.sgp-main { padding: 1.25rem 1rem 2.5rem; min-width: 0; }
+@media (min-width: 992px) { .sgp-main { padding: 2rem 2.25rem 3rem; } }
+.sgp-saludo { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.6rem; }
+.sgp-saludo h1 { font-size: clamp(1.6rem, 3.4vw, 2.2rem); margin: 0; }
+.sgp-saludo p { margin: .25rem 0 0; color: var(--sgp-texto-suave); }
+.sgp-fecha { display: inline-flex; align-items: center; gap: .5rem; padding: .45rem .9rem; border-radius: 999px; background: #fff; font-weight: 700; font-size: .9rem; color: var(--sgp-tinta); }
+.sgp-fecha .bi { color: var(--sgp-acento-texto); }
+
+/* ---------- Tarjetas de cifras ---------- */
+.sgp-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; margin-bottom: 1.25rem; }
+@media (max-width: 1199.98px) { .sgp-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 420px) { .sgp-kpis { grid-template-columns: 1fr; } }
+.sgp-k { position: relative; padding: 1.2rem 1.35rem 1.15rem; border-radius: 24px; background: var(--sgp-azul); color: #fff; min-height: 156px; display: flex; flex-direction: column; }
+.sgp-k .cab { display: flex; align-items: center; justify-content: space-between; gap: .5rem; color: rgba(255, 255, 255, .88); font-weight: 700; font-size: .92rem; }
+.sgp-k .ico { display: inline-flex; width: 38px; height: 38px; align-items: center; justify-content: center; border-radius: 12px; background: rgba(255, 255, 255, .1); font-size: 1.1rem; color: var(--sgp-acento-2); }
+.sgp-k .num { margin-top: auto; font-family: var(--sgp-font-titulo); font-size: clamp(2.2rem, 3.4vw, 3rem); font-weight: 800; line-height: 1; }
+.sgp-k .pie { margin-top: .35rem; font-size: .85rem; color: rgba(255, 255, 255, .82); }
+.sgp-k.ambar { background: var(--sgp-acento); color: var(--sgp-tinta); }
+.sgp-k.ambar .cab, .sgp-k.ambar .pie { color: var(--sgp-tinta); }
+.sgp-k.ambar .ico { background: rgba(22, 25, 29, .12); color: var(--sgp-tinta); }
+
+/* ---------- Cajas blancas ---------- */
+.sgp-box { background: #fff; border-radius: 20px; padding: 1.35rem 1.5rem; box-shadow: 0 1px 2px rgba(22, 25, 29, .05); }
+.sgp-box > h2, .sgp-box-cab h2 { font-size: 1.15rem; margin: 0; }
+.sgp-box .sub { margin: .2rem 0 1.1rem; color: var(--sgp-texto-suave); font-size: .92rem; }
+.sgp-box-cab { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; padding: 1.2rem 1.5rem .4rem; }
+.sgp-box.plana { padding: 0; overflow: hidden; }
+.sgp-rejilla { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 1.25rem; margin-bottom: 1.25rem; }
+@media (max-width: 991.98px) { .sgp-rejilla { grid-template-columns: 1fr; } }
+
+/* ---------- La tubería: etapas de las solicitudes ---------- */
+.sgp-tuberia { display: flex; gap: 4px; height: 52px; border-radius: 26px; overflow: hidden; margin: .4rem 0 1.2rem; background: var(--sgp-linea); }
+.sgp-tuberia .seg { flex: var(--g, 1) 1 0; min-width: 7px; background: var(--c); box-shadow: inset 0 7px 0 rgba(255, 255, 255, .2), inset 0 -6px 0 rgba(0, 0, 0, .12); }
+html.anim-js .sgp-tuberia:not(.lista) .seg { flex-grow: 0; }
+html.anim-js .sgp-tuberia .seg { transition: flex-grow 1.1s cubic-bezier(.2, .7, .2, 1); }
+.sgp-tuberia .seg[hidden] { display: none; }
+.sgp-tuberia.vacia .seg { flex: 1 1 0 !important; opacity: .35; }
+.sgp-etapas { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: .55rem 1rem; }
+.sgp-etapas li { display: flex; align-items: center; gap: .55rem; font-size: .92rem; }
+.sgp-etapas li::before { content: ""; flex: none; width: .8rem; height: .8rem; border-radius: 4px; background: var(--c); }
+.sgp-etapas b { margin-left: auto; font-family: var(--sgp-font-titulo); font-size: 1.05rem; }
+
+/* ---------- Barras horizontales ---------- */
+.sgp-hbar { display: grid; grid-template-columns: minmax(0, 11rem) 1fr auto; align-items: center; gap: .75rem; padding: .5rem 0; font-size: .92rem; }
+@media (max-width: 575.98px) { .sgp-hbar { grid-template-columns: 1fr auto; } .sgp-hbar .pista { grid-column: 1 / -1; order: 3; } }
+.sgp-hbar .pista { height: 12px; border-radius: 6px; background: #eef2f6; overflow: hidden; }
+.sgp-hbar .pista i { display: block; height: 100%; width: var(--w, 0%); border-radius: 6px; background: var(--sgp-azul); }
+html.anim-js .sgp-hbar .pista i { transition: width 1s cubic-bezier(.2, .7, .2, 1); }
+.sgp-hbar b { font-family: var(--sgp-font-titulo); }
+.sgp-hbar.tope .pista i { background: var(--sgp-acento); }
+
+/* ---------- Dona de urgencia ---------- */
+.sgp-dona-caja { display: flex; flex-direction: column; align-items: center; gap: 1.1rem; }
+.sgp-dona-marco { position: relative; width: 176px; height: 176px; }
+.sgp-dona { width: 100%; height: 100%; transform: rotate(-90deg); }
+.sgp-dona circle { fill: none; stroke-width: 5.5; }
+.sgp-dona .pista { stroke: #eef2f6; }
+.sgp-dona .arco { stroke: var(--c); stroke-linecap: butt; }
+html.anim-js .sgp-dona .arco { transition: stroke-dasharray 1s cubic-bezier(.2, .7, .2, 1); }
+.sgp-dona-centro { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.sgp-dona-centro b { font-family: var(--sgp-font-titulo); font-size: 2rem; line-height: 1; }
+.sgp-dona-centro span { font-size: .8rem; color: var(--sgp-texto-suave); }
+.sgp-leyenda { list-style: none; margin: 0; padding: 0; width: 100%; display: grid; gap: .45rem; }
+.sgp-leyenda li { display: flex; align-items: center; gap: .55rem; font-size: .92rem; }
+.sgp-leyenda li::before { content: ""; width: .7rem; height: .7rem; border-radius: 50%; background: var(--c); }
+.sgp-leyenda b { margin-left: auto; font-family: var(--sgp-font-titulo); }
+
+/* ---------- Tablas ---------- */
+.sgp-tabla { --bs-table-hover-bg: #f6f8fb; }
+.sgp-tabla thead th { background: transparent; color: var(--sgp-texto-suave); font-size: .8rem; font-weight: 700; border-bottom: 1px solid var(--sgp-linea); padding: .8rem 1rem; white-space: nowrap; }
+.sgp-tabla tbody td { padding: .85rem 1rem; border-color: var(--sgp-linea); font-size: .93rem; }
+.sgp-tabla .codigo { font-weight: 800; color: var(--sgp-azul); white-space: nowrap; }
+.sgp-tabla details summary { cursor: pointer; color: var(--sgp-azul); font-weight: 700; }
+
+/* ---------- Filtros de estado (Solicitudes) ---------- */
+.sgp-filtros { display: flex; gap: .5rem; overflow-x: auto; padding: .15rem .15rem .7rem; margin: 0 -.15rem 1rem; scrollbar-width: thin; }
+.sgp-filtro { flex: none; display: inline-flex; align-items: center; gap: .45rem; padding: .5rem 1rem; border-radius: 999px; background: #fff; color: var(--sgp-tinta); text-decoration: none; font-weight: 700; font-size: .9rem; border: 2px solid transparent; }
+.sgp-filtro:hover { border-color: var(--sgp-acento); color: var(--sgp-tinta); }
+.sgp-filtro.activo { background: var(--sgp-tinta); color: #fff; }
+.sgp-filtro .sgp-punto { width: .6rem; height: .6rem; border-radius: 50%; background: var(--c); }
+.sgp-filtro:focus-visible { outline: 3px solid var(--sgp-azul); outline-offset: 2px; }
+
+/* ---------- Clientes ---------- */
+.sgp-avatar { display: inline-flex; flex: none; width: 38px; height: 38px; align-items: center; justify-content: center; border-radius: 50%; background: var(--sgp-tinta); color: var(--sgp-acento); font-family: var(--sgp-font-titulo); font-weight: 800; }
+.sgp-persona { display: flex; align-items: center; gap: .75rem; font-weight: 700; }
+
+/* ---------- Estados vacíos ---------- */
+.sgp-vacio { text-align: center; padding: 2.6rem 1rem; color: var(--sgp-texto-suave); }
+.sgp-vacio .bi { display: block; font-size: 2rem; color: var(--sgp-acento-texto); margin-bottom: .5rem; }
+.sgp-vacio strong { display: block; color: var(--sgp-tinta); font-size: 1.05rem; margin-bottom: .2rem; }
+.sgp-vacio .btn { margin-top: .9rem; }
+
+/* ---------- Formularios del panel ---------- */
+.sgp-form-card { border: 0; border-radius: 20px; max-width: 820px; }
+.sgp-panel-body .card { border-radius: 20px; }
+/* ---------- Orden de atención (Tablero) ---------- */
+.sgp-cola-cuerpo { padding: .4rem 1.5rem 1.4rem; display: grid; gap: 1rem; }
+.sgp-turno.primero {
+    display: grid; gap: .85rem; padding: 1.25rem 1.4rem; border-radius: 18px; background: var(--sgp-azul); color: #fff;
+    border-left: 8px solid var(--c, var(--sgp-acento));
+}
+.sgp-turno-etq { font-weight: 800; color: #ffc08a; font-size: .95rem; }
+.sgp-turno-datos h3 { margin: 0; font-family: var(--sgp-font-titulo); font-weight: 800; font-size: clamp(1.25rem, 2.4vw, 1.65rem); }
+.sgp-turno-datos p { margin: .2rem 0 0; color: #e1ebf8; }
+.sgp-turno-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.1rem; font-size: .9rem; color: #e1ebf8; }
+.sgp-turno-acciones { display: flex; flex-wrap: wrap; gap: .6rem; }
+.sgp-turnos { list-style: none; margin: 0; padding: 0; display: grid; }
+.sgp-turnos li {
+    display: grid; grid-template-columns: 2.1rem minmax(0, 1fr) auto auto auto; align-items: center; gap: .75rem;
+    padding: .7rem 0; border-top: 1px solid var(--sgp-linea);
+}
+.sgp-pos {
+    display: inline-flex; align-items: center; justify-content: center; width: 2.1rem; height: 2.1rem; border-radius: 50%;
+    background: #eef2f6; font-family: var(--sgp-font-titulo); font-weight: 800;
+}
+.sgp-turno-quien { display: grid; min-width: 0; }
+.sgp-turno-quien strong, .sgp-turno-quien small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sgp-turno-quien small { color: var(--sgp-texto-suave); }
+.sgp-turno-espera { color: var(--sgp-texto-suave); font-size: .88rem; white-space: nowrap; }
+@media (max-width: 575.98px) {
+    .sgp-turnos li { grid-template-columns: 2.1rem minmax(0, 1fr) auto; }
+    .sgp-turnos li .sgp-turno-espera { display: none; }
+    .sgp-turnos li .btn { grid-column: 3; }
+    .sgp-turnos li .sgp-pill { grid-column: 2; justify-self: start; }
+}
+
+/* ---------- Ficha de una solicitud ---------- */
+.sgp-ficha { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 1.25rem; }
+@media (max-width: 991.98px) { .sgp-ficha { grid-template-columns: 1fr; } }
+.sgp-datos { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: .7rem 1rem; margin: 0; }
+.sgp-datos dt { color: var(--sgp-texto-suave); font-weight: 700; font-size: .9rem; }
+.sgp-datos dd { margin: 0; overflow-wrap: anywhere; }
+.sgp-datos dd.sgp-texto { white-space: pre-line; }
+@media (max-width: 575.98px) { .sgp-datos { grid-template-columns: 1fr; gap: .1rem; } .sgp-datos dd { margin-bottom: .6rem; } }
+
+/* ---------- Alerta de solicitud nueva ---------- */
+.sgp-rail .nav-link { position: relative; }
+.sgp-contador {
+    position: absolute; top: .2rem; right: .35rem; min-width: 1.3rem; height: 1.3rem; padding: 0 .35rem; border-radius: 999px;
+    background: #c8372d; color: #fff; font-size: .72rem; font-weight: 800; line-height: 1.3rem; text-align: center;
+}
+@media (max-width: 991.98px) { .sgp-contador { top: 50%; right: 1rem; transform: translateY(-50%); } }
+.sgp-avisos { position: fixed; top: 1rem; right: 1rem; z-index: 1085; display: grid; gap: .6rem; width: min(380px, calc(100vw - 2rem)); }
+.sgp-aviso {
+    display: grid; gap: .3rem; justify-items: start; padding: .9rem 1rem 1rem; border-radius: 16px; background: #fff;
+    border-left: 8px solid var(--c, var(--sgp-acento)); box-shadow: 0 12px 32px rgba(22, 25, 29, .25);
+}
+.sgp-aviso-cab { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: .5rem; }
+.sgp-aviso-cerrar { border: 0; background: transparent; font-size: 1.5rem; line-height: 1; padding: 0 .3rem; color: var(--sgp-texto-suave); }
+.sgp-aviso-cerrar:hover { color: var(--sgp-tinta); }
+.sgp-aviso-cerrar:focus-visible { outline: 3px solid var(--sgp-azul); outline-offset: 2px; border-radius: 6px; }
+.sgp-aviso-quien { font-weight: 700; }
+.sgp-aviso-que { color: var(--sgp-texto-suave); font-size: .92rem; margin-bottom: .3rem; }
+@keyframes sgp-aviso-entra { from { opacity: 0; transform: translateX(28px); } }
+html.anim-js .sgp-aviso { animation: sgp-aviso-entra .35s cubic-bezier(.2, .8, .2, 1); }
+
+/* ---------- Fotos como pista de urgencia (chip en lista, cola y tablero) ---------- */
+.sgp-foto-chip { display: inline-flex; align-items: center; gap: .35rem; font-weight: 700; font-size: .85rem; }
+.sgp-turno .sgp-foto-chip { color: #ffc08a; }
+.sgp-tabla .sgp-foto-chip { color: var(--sgp-acento-texto); margin-top: .15rem; }
+.sgp-turno-quien .sgp-foto-chip { color: var(--sgp-acento-texto); margin-left: .35rem; }
+
+/* ---------- Azul con más fuerza: tarjetas de cifras y menú ---------- */
+.sgp-k:not(.ambar) { background: var(--sgp-azul); box-shadow: none; }
+.sgp-k.ambar { box-shadow: 0 10px 24px rgba(244, 114, 22, .32); }
+@media (min-width: 992px) {
+    .sgp-rail { background: var(--sgp-tinta); }
+}

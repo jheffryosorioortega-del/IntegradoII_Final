@@ -1,0 +1,22 @@
+# Claves de las bases de datos (se crean a partir de .env.example)
+.env
+# Cualquier copia o variante del .env (.env.bak, .env.local, ...) también lleva claves; solo el ejemplo se sube.
+.env.*
+!.env.example
+
+# Copias de seguridad de las bases (las genera el servicio "backup" en producción): contienen datos reales
+backups/
+
+# Bases H2 locales de desarrollo
+data/
+*.mv.db
+*.trace.db
+
+# Compilados
+target/
+
+# Configuración personal del editor (las configuraciones de ejecución compartidas están en .run/)
+.idea/
+
+# Script SQL con las claves reales (generado desde .env)
+*.local.sql

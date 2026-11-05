@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Acceso interno')}"></head>
+<body>
+<main class="sgp-login d-flex align-items-center justify-content-center p-3">
+    <div class="container px-0">
+        <div class="card shadow border-0 overflow-hidden mx-auto sgp-login-card">
+            <div class="row g-0">
+                <div class="col-md-6 d-none d-md-block">
+                    <div class="sgp-login-arte h-100 d-flex align-items-end p-4">
+                        <div>
+                            <h2 class="h4">Gestión integral de servicios técnicos</h2>
+                            <p class="mb-0 text-white-50">Solicitudes, clientes y seguimiento en un solo lugar.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card-body p-4 p-lg-5">
+                        <a th:href="@{/}" class="sgp-brand text-decoration-none mb-4 d-inline-flex">
+                            <img class="sgp-logo sgp-logo-login" th:src="@{/img/logo-sgp.png}" alt="Servicios Generales Polanco" width="190" height="60"><small class="mt-2">Acceso interno</small>
+                        </a>
+
+                        <div class="alert alert-danger py-2" role="alert" th:if="${param.error}">
+                            <i class="bi bi-exclamation-triangle me-1"></i>Credenciales incorrectas o cuenta inactiva.
+                        </div>
+                        <div class="alert alert-danger py-2" role="alert" th:if="${param.bloqueado}">
+                            <i class="bi bi-shield-lock me-1"></i>Demasiados intentos fallidos. Espera unos minutos antes de volver a intentarlo.
+                        </div>
+                        <div class="alert alert-warning py-2" role="alert" th:if="${param.servicio}">
+                            <i class="bi bi-plug me-1"></i>El servicio de usuarios no está disponible. Inténtalo en unos minutos.
+                        </div>
+                        <div class="alert alert-warning py-2" role="alert" th:if="${param.expirada}">
+                            <i class="bi bi-clock-history me-1"></i>Tu sesión venció. Inicia sesión de nuevo.
+                        </div>
+                        <div class="alert alert-success py-2" role="alert" th:if="${param.logout}">Sesión cerrada.</div>
+
+                        <form th:action="@{/login}" method="post" class="needs-validation" novalidate>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Correo</label>
+                                <input id="username" name="username" type="email" class="form-control" required autofocus
+                                       maxlength="120" autocomplete="username" data-filtro="correo">
+                                <div class="invalid-feedback">Escribe un correo válido.</div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Contraseña</label>
+                                <input id="password" name="password" type="password" class="form-control" required
+                                       maxlength="100" autocomplete="current-password">
+                                <div class="invalid-feedback">Escribe tu contraseña.</div>
+                            </div>
+                            <button class="btn btn-primary w-100 btn-lg" type="submit">Ingresar</button>
+                            <a th:href="@{/}" class="d-block text-center mt-3 small"><i class="bi bi-arrow-left me-1"></i>Volver al sitio</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

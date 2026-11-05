@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 640" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#334155"/>
+    </marker>
+  </defs>
+  <rect width="1180" height="640" fill="#ffffff"/>
+  <text x="590" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#16191d">Arquitectura en microservicios — SGP (una base de datos y un motor distinto por servicio)</text>
+
+  <!-- Navegador -->
+  <rect x="470" y="60" width="240" height="56" rx="10" fill="#16191d"/>
+  <text x="590" y="94" text-anchor="middle" font-size="15" fill="#fff" font-weight="600">Navegador del usuario</text>
+
+  <!-- Front-End -->
+  <rect x="420" y="150" width="340" height="70" rx="10" fill="#22262c"/>
+  <text x="590" y="178" text-anchor="middle" font-size="15" fill="#fff" font-weight="700">ms-frontend (8090)</text>
+  <text x="590" y="198" text-anchor="middle" font-size="12" fill="#d3d8de">Bootstrap 5 + Thymeleaf + Spring Security · sin BD propia</text>
+  <line x1="590" y1="116" x2="590" y2="150" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Gateway -->
+  <rect x="440" y="260" width="300" height="70" rx="10" fill="#f5a02a"/>
+  <text x="590" y="288" text-anchor="middle" font-size="15" fill="#16191d" font-weight="700">Gateway (8080)</text>
+  <text x="590" y="308" text-anchor="middle" font-size="12" fill="#16191d">API Gateway · enruta /api/** por path</text>
+  <line x1="590" y1="220" x2="590" y2="260" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="610" y="245" font-size="11" fill="#334155">REST / JSON</text>
+
+  <!-- Microservicios -->
+  <rect x="80"  y="380" width="260" height="90" rx="10" fill="#1f7a5f"/>
+  <text x="210" y="410" text-anchor="middle" font-size="14" fill="#fff" font-weight="700">ms-usuarios (8081)</text>
+  <text x="210" y="430" text-anchor="middle" font-size="11" fill="#e3f3ec">Autenticación y roles · RF01</text>
+  <text x="210" y="448" text-anchor="middle" font-size="11" fill="#e3f3ec">BD propia: sgp_usuarios</text>
+
+  <rect x="460" y="380" width="260" height="90" rx="10" fill="#1f7a5f"/>
+  <text x="590" y="410" text-anchor="middle" font-size="14" fill="#fff" font-weight="700">ms-clientes (8082)</text>
+  <text x="590" y="430" text-anchor="middle" font-size="11" fill="#e3f3ec">Clientes y ubicaciones · RF02</text>
+  <text x="590" y="448" text-anchor="middle" font-size="11" fill="#e3f3ec">BD propia: sgp_clientes</text>
+
+  <rect x="840" y="380" width="260" height="90" rx="10" fill="#1f7a5f"/>
+  <text x="970" y="410" text-anchor="middle" font-size="14" fill="#fff" font-weight="700">ms-solicitudes (8083)</text>
+  <text x="970" y="430" text-anchor="middle" font-size="11" fill="#e3f3ec">Solicitudes · RF03</text>
+  <text x="970" y="448" text-anchor="middle" font-size="11" fill="#e3f3ec">BD propia: sgp_solicitudes</text>
+
+  <!-- Gateway -> servicios -->
+  <line x1="520" y1="330" x2="230" y2="380" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="590" y1="330" x2="590" y2="380" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="660" y1="330" x2="950" y2="380" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- solicitudes -> clientes directo -->
+  <path d="M840 440 C 760 440, 760 400, 720 400" fill="none" stroke="#9a4d00" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+  <text x="780" y="372" font-size="11" fill="#9a4d00" text-anchor="middle">llamada directa</text>
+  <text x="780" y="386" font-size="11" fill="#9a4d00" text-anchor="middle">(no pasa por el Gateway)</text>
+
+  <!-- Bases de datos -->
+  <line x1="210" y1="470" x2="210" y2="520" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="590" y1="470" x2="590" y2="520" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="970" y1="470" x2="970" y2="520" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <g transform="translate(210,545)">
+    <ellipse cx="0" cy="0" rx="62" ry="14" fill="#336791"/>
+    <rect x="-62" y="0" width="124" height="30" fill="#336791"/>
+    <ellipse cx="0" cy="30" rx="62" ry="14" fill="#2b5578"/>
+    <text x="0" y="8" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">PostgreSQL 16</text>
+    <text x="0" y="62" text-anchor="middle" font-size="11" fill="#334155">sgp_usuarios · puerto 5432</text>
+  </g>
+  <g transform="translate(590,545)">
+    <ellipse cx="0" cy="0" rx="62" ry="14" fill="#00758f"/>
+    <rect x="-62" y="0" width="124" height="30" fill="#00758f"/>
+    <ellipse cx="0" cy="30" rx="62" ry="14" fill="#005a6e"/>
+    <text x="0" y="8" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">MySQL 8.0</text>
+    <text x="0" y="62" text-anchor="middle" font-size="11" fill="#334155">sgp_clientes · puerto 3306</text>
+  </g>
+  <g transform="translate(970,545)">
+    <ellipse cx="0" cy="0" rx="62" ry="14" fill="#a91d22"/>
+    <rect x="-62" y="0" width="124" height="30" fill="#a91d22"/>
+    <ellipse cx="0" cy="30" rx="62" ry="14" fill="#861418"/>
+    <text x="0" y="8" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">SQL Server 2022</text>
+    <text x="0" y="62" text-anchor="middle" font-size="11" fill="#334155">sgp_solicitudes · puerto 1433</text>
+  </g>
+
+  <text x="1160" y="628" text-anchor="end" font-size="10" fill="#8395a7">Sin perfil "bd", cada servicio usa H2 (archivo local) para poder ejecutarse sin instalar nada</text>
+</svg>

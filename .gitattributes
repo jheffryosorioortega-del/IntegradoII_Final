@@ -1,0 +1,4 @@
+# El script de inicio de PostgreSQL corre dentro de Linux: debe terminar sus líneas con LF, aunque se edite en Windows.
+*.sh text eol=lf
+docker/Dockerfile text eol=lf
+docker/caddy/Caddyfile text eol=lf

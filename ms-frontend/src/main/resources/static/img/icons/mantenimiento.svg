@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Mantenimiento y desatoros">
+  <rect width="64" height="64" rx="16" fill="#e6f1f8"/>
+  <g transform="translate(32 32) rotate(45)">
+    <rect x="-5" y="-4" width="10" height="34" rx="5" fill="#0b3c5d"/>
+    <path d="M-15 -4 a15 15 0 1 1 30 0 l-8 0 a7 7 0 1 0 -14 0 z" fill="#0b3c5d" transform="translate(0 -14)"/>
+  </g>
+  <circle cx="46" cy="18" r="6" fill="#f5a02a"/>
+</svg>

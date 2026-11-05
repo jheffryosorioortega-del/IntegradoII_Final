@@ -1,0 +1,16 @@
+/* Fuentes alojadas en el proyecto (la política de seguridad CSP solo permite recursos del propio sitio).
+   Aleo y Ruda: licencia SIL Open Font License 1.1 (libres). Archivos tomados de @fontsource. Solo subconjunto latino. */
+@font-face { font-family: "Aleo"; font-style: normal; font-weight: 400; font-display: swap;
+    src: url("../fonts/aleo-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Aleo"; font-style: normal; font-weight: 700; font-display: swap;
+    src: url("../fonts/aleo-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Aleo"; font-style: normal; font-weight: 800; font-display: swap;
+    src: url("../fonts/aleo-latin-800-normal.woff2") format("woff2"); }
+@font-face { font-family: "Ruda"; font-style: normal; font-weight: 400; font-display: swap;
+    src: url("../fonts/ruda-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Ruda"; font-style: normal; font-weight: 500; font-display: swap;
+    src: url("../fonts/ruda-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Ruda"; font-style: normal; font-weight: 700; font-display: swap;
+    src: url("../fonts/ruda-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Ruda"; font-style: normal; font-weight: 800; font-display: swap;
+    src: url("../fonts/ruda-latin-800-normal.woff2") format("woff2"); }

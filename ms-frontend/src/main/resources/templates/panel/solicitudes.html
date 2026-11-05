@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Solicitudes')}"></head>
+<body class="sgp-panel-body">
+<div class="d-lg-flex min-vh-100">
+    <th:block th:replace="~{fragments/layout :: menuPanel('solicitudes')}"></th:block>
+    <main class="flex-grow-1 sgp-main">
+
+        <div class="sgp-saludo">
+            <div>
+                <h1>Solicitudes</h1>
+                <p th:text="${#lists.size(solicitudes)} + (${#lists.size(solicitudes) == 1} ? ' solicitud' : ' solicitudes') + (${filtro != null} ? ' en la etapa «' + ${filtro.etiqueta} + '»' : ' en total')">12 solicitudes en total</p>
+                <p class="small mb-0">Orden de atención: primero la prioridad más alta y, si empatan, la que llegó antes. Las cerradas van al final.</p>
+            </div>
+        </div>
+
+        <div class="alert alert-success py-2" role="status" th:if="${ok}" th:text="${ok}">Estado actualizado.</div>
+        <div class="alert alert-warning py-2" role="alert" th:if="${error}">
+            <i class="bi bi-exclamation-triangle me-1"></i><span th:text="${error}">No se puede pasar a esa etapa.</span>
+        </div>
+
+        <nav class="sgp-filtros" aria-label="Filtrar por etapa">
+            <a class="sgp-filtro" th:classappend="${filtro == null} ? 'activo'" th:href="@{/panel/solicitudes}"
+               th:aria-current="${filtro == null} ? 'page'">Todas</a>
+            <a class="sgp-filtro" th:each="e : ${estados}" th:classappend="${e == filtro} ? 'activo'"
+               th:href="@{/panel/solicitudes(estado=${e.name()})}" th:aria-current="${e == filtro} ? 'page'">
+                <span class="sgp-punto" th:classappend="'st-' + ${#strings.toLowerCase(e.name())}"></span><span th:text="${e.etiqueta}">Estado</span>
+            </a>
+        </nav>
+
+        <section class="sgp-box plana" aria-label="Lista de solicitudes">
+            <div class="table-responsive" th:unless="${#lists.isEmpty(solicitudes)}">
+                <table class="table table-hover align-middle mb-0 sgp-tabla">
+                    <thead>
+                        <tr><th>Código</th><th>Cliente</th><th>Teléfono</th><th>Servicio</th><th>Dirección</th><th>Prioridad</th><th>Recibida</th><th>Estado</th><th>Técnico</th>
+                            <th sec:authorize="hasAnyRole('ADMINISTRADOR','COORDINADOR')">Cambiar estado</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="s : ${solicitudes}">
+                            <td class="codigo"><a th:href="@{/panel/solicitudes/{id}(id=${s.id})}" th:text="${s.codigo}" title="Ver los datos, las fotos y el historial">SOL-000001</a>
+                                <small class="sgp-foto-chip d-flex" th:if="${s.fotos > 0}"><i class="bi bi-camera"></i><span th:text="${s.fotos} + (${s.fotos == 1} ? ' foto' : ' fotos')">2 fotos</span></small></td>
+                            <td>
+                                <span class="fw-semibold" th:text="${s.tipoSolicitante == 'EMPRESA'} ? ${s.razonSocial} : ${s.clienteNombre}">Cliente</span>
+                                <details th:if="${s.tipoSolicitante == 'EMPRESA'}" class="small mt-1">
+                                    <summary>Datos de empresa</summary>
+                                    <div>RUC: <span th:text="${s.ruc}"></span></div>
+                                    <div>Contacto: <span th:text="${s.personaContacto}"></span></div>
+                                    <div th:if="${s.cargo != null and !#strings.isEmpty(s.cargo)}">Cargo: <span th:text="${s.cargo}"></span></div>
+                                    <div>Correo: <span th:text="${s.correoContacto}"></span></div>
+                                    <div th:if="${s.direccionFiscal != null and !#strings.isEmpty(s.direccionFiscal)}">Dirección fiscal: <span th:text="${s.direccionFiscal}"></span></div>
+                                    <div>Requiere factura: <span th:text="${s.requiereFactura} ? 'Sí' : 'No'"></span></div>
+                                </details>
+                            </td>
+                            <td th:text="${s.clienteTelefono}">999</td>
+                            <td th:text="${s.categoria?.etiqueta}">Servicio</td>
+                            <td th:text="${s.direccionServicio}">Dirección</td>
+                            <td><span class="sgp-pill" th:if="${s.urgencia != null}" th:classappend="'ur-' + ${#strings.toLowerCase(s.urgencia.name())}" th:text="${s.urgencia.etiqueta}">Media</span></td>
+                            <td class="text-nowrap"><span th:text="${@tiempo.fecha(s.fechaCreacion)}">04/11/2026 22:15</span><small class="d-block text-muted" th:text="${@tiempo.hace(s.fechaCreacion)}">hace 3 h</small></td>
+                            <td><span class="sgp-pill" th:if="${s.estado != null}" th:classappend="'st-' + ${#strings.toLowerCase(s.estado.name())}" th:text="${s.estado.etiqueta}">Registrada</span></td>
+                            <td>
+                                <span th:text="${s.tecnicoNombre} ?: 'Sin asignar'" th:classappend="${s.tecnicoNombre == null} ? 'text-body-secondary'">Sin asignar</span>
+                                <!-- El técnico se asigna en la ficha de la solicitud; este enlace lleva directo ahí. -->
+                                <a class="small d-block" sec:authorize="hasAnyRole('ADMINISTRADOR','COORDINADOR')"
+                                   th:if="${s.tecnicoNombre == null and s.estado.name() != 'CERRADA'}"
+                                   th:href="@{/panel/solicitudes/{id}(id=${s.id})}">Asignar técnico</a>
+                            </td>
+                            <td sec:authorize="hasAnyRole('ADMINISTRADOR','COORDINADOR')">
+                                <!-- Solo se ofrecen las etapas permitidas desde el estado actual (las decide ms-solicitudes). -->
+                                <form th:if="${!#lists.isEmpty(s.siguientes)}" th:action="@{/panel/solicitudes/{id}/estado(id=${s.id})}" method="post" class="d-flex gap-1">
+                                    <select name="estado" class="form-select form-select-sm" aria-label="Nuevo estado">
+                                        <option th:value="${s.estado.name()}" th:text="${s.estado.etiqueta}" selected></option>
+                                        <option th:each="e : ${s.siguientes}" th:value="${e.name()}" th:text="${e.etiqueta}"></option>
+                                    </select>
+                                    <button class="btn btn-primary btn-sm" type="submit" title="Guardar el nuevo estado" aria-label="Guardar el nuevo estado"><i class="bi bi-check-lg"></i></button>
+                                </form>
+                                <span class="text-body-secondary small" th:if="${#lists.isEmpty(s.siguientes)}">Cerrada</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="sgp-vacio" th:if="${#lists.isEmpty(solicitudes)}">
+                <i class="bi bi-clipboard-x"></i>
+                <strong th:text="${filtro != null} ? 'No hay solicitudes en esta etapa' : 'Aún no hay solicitudes'">Aún no hay solicitudes</strong>
+                <span th:text="${filtro != null} ? 'Prueba con otra etapa o vuelve a ver todas.' : 'Aparecerán aquí cuando un cliente use el formulario de Contacto.'">Aparecerán aquí.</span>
+                <div th:if="${filtro != null}"><a class="btn btn-outline-dark btn-sm" th:href="@{/panel/solicitudes}">Ver todas</a></div>
+            </div>
+        </section>
+    </main>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

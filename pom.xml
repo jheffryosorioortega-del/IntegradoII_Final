@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  POM agregador: no compila código propio, solo agrupa los 5 módulos para poder
+  construirlos todos juntos con "mvn clean install" desde esta carpeta.
+  Cada módulo es, por su cuenta, una aplicación Spring Boot independiente,
+  con su propio pom.xml que extiende spring-boot-starter-parent.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>pe.sgp</groupId>
+    <artifactId>sgp-microservicios</artifactId>
+    <version>0.1.0</version>
+    <packaging>pom</packaging>
+    <name>sgp-microservicios</name>
+    <description>Gestión integral de servicios técnicos de SGP — versión en microservicios (educativa)</description>
+
+    <modules>
+        <module>ms-usuarios</module>
+        <module>ms-clientes</module>
+        <module>ms-solicitudes</module>
+        <module>gateway</module>
+        <module>ms-frontend</module>
+    </modules>
+</project>

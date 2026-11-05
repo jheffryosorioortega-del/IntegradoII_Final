@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Solicitar servicio')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: cabeceraPortal('contacto')}"></header>
+
+<section class="sgp-titulo sgp-titulo-1">
+    <div class="container">
+        <h1 class="display-5">Solicita tu servicio</h1>
+        <p class="mb-0 lead">Cuéntanos qué necesitas y te enviaremos una cotización.</p>
+    </div>
+</section>
+
+<section class="sgp-section">
+    <div class="container">
+        <div class="row g-4">
+
+            <!-- Formulario -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <form th:action="@{/contacto}" th:object="${form}" method="post" enctype="multipart/form-data" class="row g-3 needs-validation" novalidate>
+
+                            <div class="col-12" th:if="${#fields.hasGlobalErrors()}">
+                                <div class="alert alert-danger mb-0" role="alert" th:each="e : ${#fields.globalErrors()}" th:text="${e}"></div>
+                            </div>
+
+                            <div class="col-12" th:if="${param.limite}">
+                                <div class="alert alert-warning mb-0" role="alert">
+                                    Se enviaron muchas solicitudes desde tu conexión en poco tiempo. Espera unos minutos y vuelve a intentarlo;
+                                    si es urgente, llámanos.
+                                </div>
+                            </div>
+
+                            <div class="col-12" th:if="${errorFotos}">
+                                <div class="alert alert-danger mb-0" role="alert" th:text="${errorFotos}"></div>
+                            </div>
+
+                            <input type="hidden" th:field="*{tipoSolicitante}" id="tipoSolicitante">
+                            <div class="col-12">
+                                <div class="nav nav-tabs sgp-tipo-tabs" role="tablist" aria-label="Tipo de solicitante">
+                                    <button id="tab-persona" class="nav-link" type="button" role="tab"
+                                            data-tipo="PERSONA" aria-controls="datos-persona" th:aria-selected="${form.tipoSolicitante != 'EMPRESA'}"
+                                            th:classappend="${form.tipoSolicitante != 'EMPRESA'} ? 'active'">
+                                        <i class="bi bi-person me-2" aria-hidden="true"></i>Persona natural
+                                    </button>
+                                    <button id="tab-empresa" class="nav-link" type="button" role="tab"
+                                            data-tipo="EMPRESA" aria-controls="datos-empresa" th:aria-selected="${form.tipoSolicitante == 'EMPRESA'}"
+                                            th:classappend="${form.tipoSolicitante == 'EMPRESA'} ? 'active'">
+                                        <i class="bi bi-building me-2" aria-hidden="true"></i>Empresa
+                                    </button>
+                                </div>
+                                <noscript><p class="form-text">Activa JavaScript para cambiar el tipo de solicitante y consultar documentos.</p></noscript>
+                            </div>
+                            <fieldset id="datos-empresa" class="col-12 border-0 m-0 p-0" role="tabpanel" aria-labelledby="tab-empresa"
+                                      th:hidden="${form.tipoSolicitante != 'EMPRESA'}" th:disabled="${form.tipoSolicitante != 'EMPRESA'}">
+                                <div class="row g-3 m-0">
+                                    <div class="col-12">
+                                        <label for="ruc" class="form-label">RUC <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <input type="text" th:field="*{ruc}" class="form-control" inputmode="numeric" minlength="11" maxlength="11"
+                                                   pattern="[0-9]{11}" required autocomplete="off" placeholder="11 dígitos"
+                                                   th:classappend="${#fields.hasErrors('ruc')} ? 'is-invalid'" aria-describedby="ruc-mensaje">
+                                            <button id="consultar-ruc" type="button" class="btn btn-outline-dark"
+                                                    th:data-url="@{/contacto/consultar-ruc}" th:data-csrf="${_csrf.token}"
+                                                    th:data-csrf-header="${_csrf.headerName}">Consultar RUC</button>
+                                        </div>
+                                        <div class="text-danger small" th:errors="*{ruc}"></div>
+                                        <div id="ruc-mensaje" class="form-text" role="status" aria-live="polite">Consulta tu RUC para completar la razón social y la dirección fiscal.</div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="razonSocial" class="form-label">Razón social <span class="text-danger">*</span></label>
+                                        <input type="text" th:field="*{razonSocial}" class="form-control" required minlength="2" maxlength="250"
+                                               autocomplete="organization" placeholder="Ej.: Servicios Generales Polanco S.A.C."
+                                               th:classappend="${#fields.hasErrors('razonSocial')} ? 'is-invalid'">
+                                        <div class="invalid-feedback" th:text="${#fields.hasErrors('razonSocial')} ? ${#fields.errors('razonSocial')[0]} : 'Indica la razón social (2 a 250 caracteres).'"></div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="direccionFiscal" class="form-label">Dirección fiscal <span class="text-body-secondary">(opcional)</span></label>
+                                        <input type="text" th:field="*{direccionFiscal}" class="form-control" maxlength="300"
+                                               th:classappend="${#fields.hasErrors('direccionFiscal')} ? 'is-invalid'">
+                                        <div class="invalid-feedback" th:errors="*{direccionFiscal}"></div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <div id="datos-persona" class="col-12" role="tabpanel" aria-labelledby="tab-persona" th:hidden="${form.tipoSolicitante == 'EMPRESA'}">
+                                <label for="dni-consulta" class="form-label">DNI <span class="text-body-secondary">(opcional)</span></label>
+                                <div class="input-group">
+                                    <input id="dni-consulta" type="text" class="form-control" inputmode="numeric"
+                                           maxlength="8" autocomplete="off" placeholder="8 dígitos"
+                                           aria-describedby="dni-mensaje">
+                                    <button id="consultar-dni" type="button" class="btn btn-outline-dark"
+                                            th:data-url="@{/contacto/consultar-dni}" th:data-csrf="${_csrf.token}"
+                                            th:data-csrf-header="${_csrf.headerName}">Consultar DNI</button>
+                                </div>
+                                <div id="dni-mensaje" class="form-text" role="status" aria-live="polite">Consulta tu DNI para completar nombres y apellidos, o escribe tu nombre manualmente.</div>
+                            </div>
+
+                            <div id="nombre-grupo" th:class="${form.tipoSolicitante == 'EMPRESA'} ? 'col-md-7' : 'col-12'">
+                                <label for="nombre" class="form-label"><span id="nombre-etiqueta" th:text="${form.tipoSolicitante == 'EMPRESA'} ? 'Persona de contacto' : 'Nombre completo'">Nombre completo</span> <span class="text-danger">*</span></label>
+                                <input id="nombre" type="text" th:field="*{nombre}" class="form-control"
+                                       th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid'"
+                                       th:pattern="${@reglas.nombre}" minlength="2" maxlength="60" required
+                                       autocomplete="name" data-filtro="nombre" placeholder="Ej.: María Quispe">
+                                <div class="form-text">Solo letras y espacios; no se permiten números.</div>
+                                <div class="invalid-feedback" th:text="${#fields.hasErrors('nombre')} ? ${#fields.errors('nombre')[0]} : ${@reglas.msgNombre}"></div>
+                            </div>
+
+                            <fieldset data-empresa-extra class="col-md-5 border-0"
+                                      th:hidden="${form.tipoSolicitante != 'EMPRESA'}" th:disabled="${form.tipoSolicitante != 'EMPRESA'}">
+                                <label for="cargo" class="form-label">Cargo <span class="text-body-secondary">(opcional)</span></label>
+                                <input type="text" th:field="*{cargo}" class="form-control" maxlength="80" placeholder="Ej.: Jefe de mantenimiento"
+                                       th:classappend="${#fields.hasErrors('cargo')} ? 'is-invalid'">
+                                <div class="invalid-feedback" th:errors="*{cargo}"></div>
+                            </fieldset>
+                            <fieldset data-empresa-extra class="col-12 border-0"
+                                      th:hidden="${form.tipoSolicitante != 'EMPRESA'}" th:disabled="${form.tipoSolicitante != 'EMPRESA'}">
+                                <div>
+                                    <div>
+                                        <div class="form-check">
+                                            <input id="requiereFactura" type="checkbox" th:field="*{requiereFactura}" class="form-check-input">
+                                            <label for="requiereFactura" class="form-check-label">Requiere factura electrónica</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <div class="col-md-6">
+                                <label for="telefono" class="form-label">Teléfono <span class="text-danger">*</span></label>
+                                <input id="telefono" type="tel" th:field="*{telefono}" class="form-control"
+                                       th:classappend="${#fields.hasErrors('telefono')} ? 'is-invalid'"
+                                       th:pattern="${@reglas.telefono}" inputmode="numeric" maxlength="9" required
+                                       autocomplete="tel-national" data-filtro="telefono" placeholder="987654321">
+                                <div class="form-text">Solo números: celular de 9 dígitos (empieza con 9) o fijo de 7 u 8.</div>
+                                <div class="invalid-feedback" th:text="${#fields.hasErrors('telefono')} ? ${#fields.errors('telefono')[0]} : ${@reglas.msgTelefono}"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="correo" class="form-label">Correo <span id="correo-indicacion" th:class="${form.tipoSolicitante == 'EMPRESA'} ? 'text-danger' : 'text-body-secondary'" th:text="${form.tipoSolicitante == 'EMPRESA'} ? '*' : '(opcional)'">(opcional)</span></label>
+                                <input id="correo" th:required="${form.tipoSolicitante == 'EMPRESA'}" type="email" th:field="*{correo}" class="form-control"
+                                       th:classappend="${#fields.hasErrors('correo')} ? 'is-invalid'"
+                                       th:pattern="${@reglas.correo}" maxlength="120" autocomplete="email" data-filtro="correo"
+                                       placeholder="nombre@dominio.com">
+                                <div class="invalid-feedback" th:text="${#fields.hasErrors('correo')} ? ${#fields.errors('correo')[0]} : ${@reglas.msgCorreo}"></div>
+                            </div>
+
+                            <div class="col-md-7">
+                                <label for="direccion" class="form-label">Dirección del servicio <span class="text-danger">*</span></label>
+                                <input id="direccion" type="text" th:field="*{direccion}" class="form-control"
+                                       th:classappend="${#fields.hasErrors('direccion')} ? 'is-invalid'"
+                                       th:pattern="${@reglas.direccion}" minlength="5" maxlength="120" required
+                                       autocomplete="street-address" data-filtro="direccion" placeholder="Av. Los Olivos 123">
+                                <div class="form-text">Letras, números y . , # ° / -</div>
+                                <div class="invalid-feedback" th:text="${#fields.hasErrors('direccion')} ? ${#fields.errors('direccion')[0]} : ${@reglas.msgDireccion}"></div>
+                            </div>
+
+                            <div class="col-md-5">
+                                <label for="distrito" class="form-label">Distrito</label>
+                                <input id="distrito" type="text" th:field="*{distrito}" class="form-control"
+                                       th:classappend="${#fields.hasErrors('distrito')} ? 'is-invalid'"
+                                       th:pattern="${@reglas.distrito}" maxlength="40" autocomplete="address-level2"
+                                       data-filtro="distrito" placeholder="Los Olivos">
+                                <div class="form-text">Solo letras.</div>
+                                <div class="invalid-feedback" th:text="${#fields.hasErrors('distrito')} ? ${#fields.errors('distrito')[0]} : ${@reglas.msgDistrito}"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="categoria" class="form-label">Tipo de servicio <span class="text-danger">*</span></label>
+                                <select id="categoria" th:field="*{categoria}" class="form-select"
+                                        th:classappend="${#fields.hasErrors('categoria')} ? 'is-invalid'" required>
+                                    <option value="">Selecciona…</option>
+                                    <option th:each="c : ${categorias}" th:value="${c.name()}" th:text="${c.etiqueta}"></option>
+                                </select>
+                                <div class="invalid-feedback" th:text="${#fields.hasErrors('categoria')} ? ${#fields.errors('categoria')[0]} : 'Selecciona el tipo de servicio'"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="urgencia" class="form-label">Prioridad</label>
+                                <div class="form-text mt-0 mb-1">Alta si hay una fuga o falla que empeora. Las fotos ayudan a confirmarlo.</div>
+                                <select id="urgencia" th:field="*{urgencia}" class="form-select">
+                                    <option th:each="u : ${urgencias}" th:value="${u.name()}" th:text="${u.etiqueta}"></option>
+                                </select>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="descripcion" class="form-label">Describe el problema <span class="text-danger">*</span></label>
+                                <textarea id="descripcion" rows="5" th:field="*{descripcion}" class="form-control"
+                                          th:classappend="${#fields.hasErrors('descripcion')} ? 'is-invalid'"
+                                          minlength="10" maxlength="600" required data-filtro="descripcion"
+                                          placeholder="Ej.: La bomba de agua no presuriza y hace ruido."></textarea>
+                                <div class="form-text"><span data-contador-de="descripcion">0</span> / 600 caracteres (mínimo 10).</div>
+                                <div class="invalid-feedback" th:text="${#fields.hasErrors('descripcion')} ? ${#fields.errors('descripcion')[0]} : 'Describe el problema con 10 a 600 caracteres'"></div>
+                            </div>
+
+                            <div class="col-12">
+                                <span class="form-label d-block" id="fotos-etq">Fotos del problema <span class="text-body-secondary">(opcional)</span></span>
+                                <div class="sgp-subir" data-subir data-max="4" data-max-mb="6">
+                                    <input id="fotos" name="fotos" type="file" class="sgp-subir-input" multiple
+                                           accept="image/jpeg,image/png,image/webp" aria-labelledby="fotos-etq"
+                                           aria-describedby="fotos-ayuda fotos-estado">
+                                    <label for="fotos" class="sgp-subir-zona">
+                                        <i class="bi bi-camera" aria-hidden="true"></i>
+                                        <span><strong>Toca para elegir fotos</strong> o arrástralas aquí</span>
+                                        <small id="fotos-ayuda">Una foto del daño nos ayuda a confirmar qué tan urgente es la visita. Hasta 4 imágenes JPG, PNG o WebP.</small>
+                                    </label>
+                                    <ul class="sgp-subir-lista" data-subir-lista></ul>
+                                    <p id="fotos-estado" class="form-text sgp-subir-estado mb-0" role="status" aria-live="polite" data-subir-estado></p>
+                                </div>
+                            </div>
+
+                            <div class="col-12 d-grid d-sm-flex gap-2 pt-2">
+                                <button class="btn btn-primary btn-lg px-4" type="submit"><i class="bi bi-send me-1"></i>Enviar solicitud</button>
+                                <a class="btn btn-outline-dark btn-lg" th:href="@{/servicios}">Ver servicios</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Qué pasa después -->
+            <div class="col-lg-4">
+                <div class="card sgp-card text-white">
+                    <div class="card-body p-4">
+                        <h2 class="h5 mb-3"><i class="bi bi-list-check me-2 text-warning"></i>¿Qué sigue?</h2>
+                        <ol class="ps-3 mb-4 small">
+                            <li class="mb-2">Recibimos tu solicitud y te damos un <strong>código de seguimiento</strong>.</li>
+                            <li class="mb-2">Evaluamos tu necesidad y te enviamos una <strong>cotización</strong> con materiales y mano de obra separados.</li>
+                            <li class="mb-2">Coordinamos la visita y el técnico responsable.</li>
+                            <li>Trabajamos con <strong>pruebas de funcionamiento</strong> y evidencia final.</li>
+                        </ol>
+                        <p class="small mb-0 text-white-50"><i class="bi bi-lock me-1"></i>Tus datos se usan solo para atender tu solicitud.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer th:replace="~{fragments/layout :: pieportal}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+<script th:src="@{/js/dni.js}" defer></script>
+<script th:src="@{/js/empresa.js}" defer></script>
+<script th:src="@{/js/fotos.js}" defer></script>
+</body>
+</html>

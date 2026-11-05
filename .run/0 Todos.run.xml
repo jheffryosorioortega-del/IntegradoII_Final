@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="0 Todos" type="CompoundRunConfigurationType">
+    <toRun type="Application" name="1 Usuarios" />
+    <toRun type="Application" name="2 Clientes" />
+    <toRun type="Application" name="3 Solicitudes" />
+    <toRun type="Application" name="4 Gateway" />
+    <toRun type="Application" name="5 Frontend" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -1,0 +1,9 @@
+# Lo que NO viaja al construir una imagen (BuildKit lee este archivo junto al Dockerfile).
+# Los compilados se regeneran dentro del contenedor, y los secretos nunca deben entrar a una imagen.
+target
+.idea
+*.log
+*.iml
+.env
+.env.*
+*.mv.db

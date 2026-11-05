@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 400" role="img" aria-label="Equipo técnico de SGP">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b3c5d"/><stop offset="1" stop-color="#1d6a96"/></linearGradient></defs>
+  <rect width="520" height="400" rx="24" fill="url(#g)"/>
+  <circle cx="400" cy="90" r="120" fill="#fff" opacity=".07"/>
+  <circle cx="110" cy="330" r="130" fill="#fff" opacity=".06"/>
+  <!-- Casco -->
+  <path d="M170 200a90 90 0 0 1 180 0z" fill="#f5a02a"/>
+  <rect x="150" y="196" width="220" height="24" rx="12" fill="#e08a12"/>
+  <rect x="246" y="118" width="28" height="80" rx="10" fill="#e08a12"/>
+  <!-- Persona -->
+  <circle cx="260" cy="250" r="46" fill="#f3d3b5"/>
+  <path d="M150 400c0-64 50-104 110-104s110 40 110 104z" fill="#ffffff"/>
+  <path d="M215 300l45 40 45-40" fill="none" stroke="#0b3c5d" stroke-width="8" stroke-linejoin="round"/>
+  <!-- Herramientas -->
+  <g transform="translate(410 250) rotate(20)" fill="#fff"><rect x="-8" y="-6" width="16" height="110" rx="8"/><path d="M-26 -6 a26 26 0 1 1 52 0 l-12 0 a14 14 0 1 0 -28 0 z"/></g>
+  <path d="M84 150c-16 22-24 34-24 46a24 24 0 0 0 48 0c0-12-8-24-24-46z" fill="#7fd3ff"/>
+</svg>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Inicio')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: cabeceraPortal('inicio')}"></header>
+
+<!-- Carrusel principal (componente Carousel de Bootstrap) -->
+<section id="heroCarousel" class="carousel slide carousel-fade sgp-hero" data-bs-ride="carousel" data-bs-interval="6000"
+         aria-label="Destacados de SGP">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Diapositiva 1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Diapositiva 2"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Diapositiva 3"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active sgp-slide sgp-slide-1">
+            <div class="sgp-slide-inner d-flex align-items-center justify-content-center">
+                <div class="container text-center d-flex flex-column align-items-center">
+                    <p class="sgp-kicker">Lima Metropolitana</p>
+                    <h1 class="display-4">Soluciones técnicas confiables para tu hogar y tu empresa</h1>
+                    <p class="lead">Gasfitería, cisternas, bombas, termas y electricidad con atención personalizada.</p>
+                    <a class="btn btn-primary btn-lg" th:href="@{/contacto}">Solicitar servicio</a>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item sgp-slide sgp-slide-2">
+            <div class="sgp-slide-inner d-flex align-items-center justify-content-center">
+                <div class="container text-center d-flex flex-column align-items-center">
+                    <p class="sgp-kicker">Cotizaciones claras</p>
+                    <h1 class="display-4">Materiales y mano de obra separados, sin sorpresas</h1>
+                    <p class="lead">Seguimiento de tu solicitud desde el primer contacto hasta la conformidad final.</p>
+                    <a class="btn btn-primary btn-lg" th:href="@{/servicios}">Ver servicios</a>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item sgp-slide sgp-slide-3">
+            <div class="sgp-slide-inner d-flex align-items-center justify-content-center">
+                <div class="container text-center d-flex flex-column align-items-center">
+                    <p class="sgp-kicker">Garantía técnica</p>
+                    <h1 class="display-4">Trabajo probado y documentado</h1>
+                    <p class="lead">Cada servicio termina con pruebas de funcionamiento y evidencia del resultado.</p>
+                    <a class="btn btn-primary btn-lg" href="#como-trabajamos">Cómo trabajamos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Siguiente</span>
+    </button>
+</section>
+
+<!-- Barra de cotización, justo debajo del hero -->
+<section class="sgp-quote">
+    <div class="container py-3 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+        <div>
+            <h2 class="h5 mb-0">¿Tienes un problema técnico que resolver?</h2>
+            <small>Te respondemos con una cotización clara, en menos de 24 horas.</small>
+        </div>
+        <a class="btn btn-primary" th:href="@{/contacto}">Pide tu cotización</a>
+    </div>
+</section>
+
+<!-- Franja de confianza -->
+<section class="sgp-trust py-3">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3" data-stagger="4">
+            <div class="col"><div class="item"><strong class="d-block"><i class="bi bi-person-heart me-1"></i>Atención personalizada</strong><small>Trato cercano a cada cliente</small></div></div>
+            <div class="col"><div class="item"><strong class="d-block"><i class="bi bi-shield-check me-1"></i>Personal calificado</strong><small>Procedimientos seguros</small></div></div>
+            <div class="col"><div class="item"><strong class="d-block"><i class="bi bi-patch-check me-1"></i>Pruebas de funcionamiento</strong><small>Verificamos antes de cerrar</small></div></div>
+            <div class="col"><div class="item"><strong class="d-block"><i class="bi bi-chat-text me-1"></i>Comunicación transparente</strong><small>Estado de tu servicio siempre claro</small></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- "Somos SGP" + indicadores (datos reales del proyecto, no cifras inventadas) -->
+<section class="sgp-section">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6">
+                <div class="sgp-collage">
+                    <img class="sgp-collage-a" data-anim="left" th:src="@{/img/servicio-terma.jpg}" alt="Técnico de Servicios Generales Polanco instalando una terma" loading="lazy" width="1448" height="1086">
+                    <img class="sgp-collage-b" data-anim="right" data-delay="0.3" data-parallax="0.07" th:src="@{/img/servicio-cisterna.jpg}" alt="Técnico limpiando una cisterna con equipo de seguridad" loading="lazy" width="1448" height="1086">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <p class="sgp-kicker oscuro" data-anim="up">Somos</p>
+                <h2 class="display-6" data-split>Servicios Generales Polanco</h2>
+                <p data-anim="up" data-delay="0.15">Brindamos soluciones integrales de mantenimiento e instalación para hogares, empresas, condominios e instituciones,
+                   con personal calificado, procedimientos seguros, comunicación transparente y pruebas que garantizan la operatividad
+                   del servicio.</p>
+                <a class="btn btn-outline-dark" th:href="@{/contacto}" data-anim="up" data-delay="0.25">Contáctanos</a>
+
+                <div class="row g-0 mt-4 rounded-3 overflow-hidden" data-anim="zoom" data-delay="0.2">
+                    <div class="col-6"><div class="sgp-stat oscuro"><span class="num" data-count="6">0</span><span class="etiqueta">Servicios especializados</span></div></div>
+                    <div class="col-6"><div class="sgp-stat ambar"><span class="num" data-count="72" data-suffix="h">0</span><span class="etiqueta">Vigencia de cada cotización</span></div></div>
+                    <div class="col-6"><div class="sgp-stat ambar"><span class="num" data-count="100" data-suffix="%">0</span><span class="etiqueta">Servicios con prueba final</span></div></div>
+                    <div class="col-6"><div class="sgp-stat oscuro"><span class="num" data-count="5">0</span><span class="etiqueta">Etapas, de la solicitud al cierre</span></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Antes y después: comparador interactivo (js/antesdespues.js). Fotos: static/img/antes-1.jpg y despues-1.jpg -->
+<section class="sgp-section alt">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-5">
+                <p class="sgp-kicker oscuro" data-anim="up">Resultados</p>
+                <h2 class="display-6" data-split>Servicio de gasfitería: antes y después</h2>
+                <p data-anim="up" data-delay="0.15">Adjuntamos pruebas reales de enchapados: los resultados de nuestro trabajo en un antes y después. Desliza la barra para compararlos.</p>
+                <p class="small text-secondary" data-anim="up" data-delay="0.25"><i class="bi bi-arrow-left-right me-1"></i>Arrastra con el mouse o con el dedo.</p>
+                <a class="btn btn-primary" th:href="@{/contacto}" data-anim="up" data-delay="0.3">Solicita tu servicio</a>
+            </div>
+            <div class="col-lg-7">
+                <div class="sgp-ba" data-ba data-anim="right">
+                    <img th:src="@{/img/despues-1.jpg}" alt="Después: baño remodelado con ducha de cristal y mueble nuevo" loading="lazy" width="683" height="715">
+                    <div class="sgp-ba-antes">
+                        <img th:src="@{/img/antes-1.jpg}" alt="Antes: baño antiguo con lavabo de pedestal y cortina" loading="lazy" width="683" height="715">
+                    </div>
+                    <span class="sgp-ba-tag antes">Antes</span>
+                    <span class="sgp-ba-tag despues">Después</span>
+                    <span class="sgp-ba-linea" aria-hidden="true"></span>
+                    <span class="sgp-ba-asa" aria-hidden="true"><i class="bi bi-chevron-left"></i><i class="bi bi-chevron-right"></i></span>
+                    <input class="visually-hidden" type="range" min="0" max="100" value="50" aria-label="Comparar antes y después">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Servicios (se generan desde el enum CategoriaServicio) -->
+<section class="sgp-section dark">
+    <div class="container">
+        <p class="sgp-kicker" data-anim="up">Nuestros</p>
+        <h2 class="display-6 mb-4" data-split>Servicios</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" data-stagger="3">
+            <div class="col" th:each="s : ${servicios}">
+                <article class="card sgp-card h-100">
+                    <div class="card-body p-4">
+                        <img class="mb-3" th:src="@{'/img/icons/' + ${s.icono} + '.svg'}" alt="" width="56" height="56">
+                        <h3 class="h5 card-title" th:text="${s.etiqueta}">Servicio</h3>
+                        <p class="card-text mb-0" th:text="${s.descripcion}">Descripción</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Proceso de atención (ciclo comercial y técnico del documento) -->
+<section class="sgp-section" id="como-trabajamos">
+    <div class="container">
+        <p class="sgp-kicker oscuro" data-anim="up">Cómo</p>
+        <h2 class="display-6 mb-4" data-split>Trabajamos</h2>
+        <ol class="sgp-pasos list-unstyled row row-cols-1 row-cols-sm-2 row-cols-lg-5 g-3" data-stagger="5">
+            <li class="col"><div class="h-100"><strong>Solicitud</strong><span>Registras tu necesidad en línea o por llamada.</span></div></li>
+            <li class="col"><div class="h-100"><strong>Cotización</strong><span>Recibes el detalle con vigencia y condiciones.</span></div></li>
+            <li class="col"><div class="h-100"><strong>Programación</strong><span>Coordinamos fecha, horario y técnico responsable.</span></div></li>
+            <li class="col"><div class="h-100"><strong>Ejecución</strong><span>Trabajo con diagnóstico, evidencias y pruebas.</span></div></li>
+            <li class="col"><div class="h-100"><strong>Cierre</strong><span>Conformidad, saldo e informe del servicio.</span></div></li>
+        </ol>
+    </div>
+</section>
+
+<section class="sgp-cta text-center">
+    <div class="container">
+        <h2 class="display-6" data-split>¿Necesitas un servicio técnico?</h2>
+        <p data-anim="up" data-delay="0.2">Cuéntanos tu problema y te responderemos con una cotización.</p>
+        <a class="btn btn-primary btn-lg" th:href="@{/contacto}" data-anim="up" data-delay="0.35">Solicita tu servicio</a>
+    </div>
+</section>
+
+<footer th:replace="~{fragments/layout :: pieportal}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+<script th:src="@{/js/antesdespues.js}" defer></script>
+<script th:src="@{/js/animaciones.js}" defer></script>
+</body>
+</html>
