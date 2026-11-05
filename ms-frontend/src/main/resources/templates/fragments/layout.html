@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!-- ===== <head> común. Uso: th:replace="~{fragments/layout :: head('Título')}" ===== -->
+<head th:fragment="head(titulo)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#15294a">
+    <!-- Animaciones de scroll: activadas solo si el usuario no pidio reducir el movimiento -->
+    <script th:src="@{/js/anim-init.js}"></script>
+    <title th:text="${titulo} + ' | Servicios Generales Polanco'">SGP</title>
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/icons/gasfiteria.svg}">
+    <link rel="stylesheet" th:href="@{/css/fuentes.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/css/site.css}">
+    <link rel="stylesheet" th:href="@{/css/panel.css}">
+    <link rel="stylesheet" th:href="@{/css/evidencia.css}">
+</head>
+
+<body>
+
+<!-- ===== Cabecera del portal público: navbar de Bootstrap. Uso: cabeceraPortal('inicio') ===== -->
+<header th:fragment="cabeceraPortal(activo)" class="sticky-top">
+    <nav class="navbar navbar-expand-lg sgp-navbar bg-white border-bottom" aria-label="Principal">
+        <div class="container">
+            <a class="navbar-brand sgp-brand" th:href="@{/}" aria-label="Servicios Generales Polanco, ir al inicio">
+                <img class="sgp-logo" th:src="@{/img/logo-sgp.png}" alt="Servicios Generales Polanco" width="146" height="46">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
+                    aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir el menú">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="menuPrincipal">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+                    <li class="nav-item"><a class="nav-link" th:classappend="${activo == 'inicio'} ? 'active'" th:href="@{/}">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" th:classappend="${activo == 'servicios'} ? 'active'" th:href="@{/servicios}">Servicios</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/#como-trabajamos}">Cómo trabajamos</a></li>
+                    <li class="nav-item"><a class="nav-link" th:classappend="${activo == 'contacto'} ? 'active'" th:href="@{/contacto}">Contacto</a></li>
+                    <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                        <a class="btn btn-outline-dark btn-sm" th:href="@{/login}" sec:authorize="!isAuthenticated()">
+                            <i class="bi bi-person-lock me-1"></i>Acceso interno</a>
+                        <a class="btn btn-outline-dark btn-sm" th:href="@{/panel}" sec:authorize="isAuthenticated()">
+                            <i class="bi bi-speedometer2 me-1"></i>Ir al panel</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- ===== Pie del portal ===== -->
+<footer th:fragment="pieportal" class="sgp-footer pt-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <span class="sgp-logo-chip mb-3"><img class="sgp-logo" th:src="@{/img/logo-sgp.png}" alt="Servicios Generales Polanco" width="146" height="46" loading="lazy"></span>
+                <h2>Servicios Generales Polanco</h2>
+                <p class="small mb-0">Soluciones técnicas para hogares y empresas en Lima Metropolitana.</p>
+            </div>
+            <div class="col-md-4">
+                <h2>Servicios</h2>
+                <p class="small mb-0">Gasfitería · Cisternas · Bombas · Termas · Electricidad · Mantenimiento</p>
+            </div>
+            <div class="col-md-4">
+                <h2>Contacto</h2>
+                <p class="small mb-0"><i class="bi bi-chat-dots me-1"></i>
+                    <a th:href="@{/contacto}">Solicita tu servicio en línea</a></p>
+            </div>
+        </div>
+        <div class="border-top border-secondary-subtle mt-4 py-3 small">
+            © 2026 Servicios Generales Polanco. Proyecto académico UTP.
+        </div>
+    </div>
+</footer>
+
+<!-- ===== Scripts comunes (Bootstrap, validación de campos, efectos del portal) ===== -->
+<th:block th:fragment="scripts">
+    <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/validacion.js}"></script>
+    <script th:src="@{/js/site.js}"></script>
+</th:block>
+
+<!-- ===== Menú del panel interno: barra superior en celular + barra lateral (offcanvas) ===== -->
+<th:block th:fragment="menuPanel(activo)">
+    <header class="sgp-topbar navbar navbar-dark d-lg-none px-3">
+        <button class="btn btn-outline-light btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#panelMenu"
+                aria-controls="panelMenu" aria-label="Abrir el menú"><i class="bi bi-list fs-5"></i></button>
+        <span class="navbar-brand mb-0"><img class="sgp-marca-mini" th:src="@{/img/logo-sgp-icono.png}" alt="SGP" width="30" height="30"> <small class="fw-normal opacity-75">Panel interno</small></span>
+    </header>
+    <aside class="sgp-rail offcanvas-lg offcanvas-start text-white" tabindex="-1" id="panelMenu" aria-label="Menú del panel"
+           th:data-ultimo-id="${ultimoId}" th:data-alertas-url="@{/panel/alertas}">
+        <div class="offcanvas-header d-lg-none">
+            <h2 class="offcanvas-title h5 fw-bold">Panel interno</h2>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" data-bs-target="#panelMenu" aria-label="Cerrar"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column h-100">
+            <a th:href="@{/}" class="sgp-marca d-none d-lg-inline-flex" aria-label="Ir al sitio público de SGP" title="Ir al sitio público"><img th:src="@{/img/logo-sgp-icono.png}" alt="SGP" width="40" height="40"></a>
+            <nav class="nav nav-pills flex-column gap-1" aria-label="Secciones del panel">
+                <a class="nav-link" th:classappend="${activo == 'tablero'} ? 'active'" th:href="@{/panel}" th:attr="aria-current=${activo == 'tablero'} ? 'page'" title="Tablero"><i class="bi bi-grid-1x2"></i><span>Tablero</span></a>
+                <a class="nav-link" th:classappend="${activo == 'solicitudes'} ? 'active'" th:href="@{/panel/solicitudes}" th:attr="aria-current=${activo == 'solicitudes'} ? 'page'" title="Solicitudes"><i class="bi bi-clipboard-check"></i><span>Solicitudes</span><b class="sgp-contador" th:if="${sinRevisar != null and sinRevisar > 0}" th:text="${sinRevisar}" th:title="${sinRevisar} + ' sin revisar'">0</b></a>
+                <a class="nav-link" th:classappend="${activo == 'clientes'} ? 'active'" th:href="@{/panel/clientes}" th:attr="aria-current=${activo == 'clientes'} ? 'page'" title="Clientes"
+                   sec:authorize="hasAnyRole('ADMINISTRADOR','COORDINADOR')"><i class="bi bi-people"></i><span>Clientes</span></a>
+            </nav>
+            <div class="sgp-rail-pie">
+                <div class="sgp-usuario" th:title="${#authentication.name}"><i class="bi bi-person-circle"></i><span sec:authentication="name">usuario</span></div>
+                <form th:action="@{/logout}" method="post">
+                    <button class="sgp-salir" type="submit" title="Cerrar sesión"><i class="bi bi-box-arrow-right"></i><span>Salir</span></button>
+                </form>
+            </div>
+        </div>
+    </aside>
+    <!-- Alerta de solicitudes nuevas: consulta cada 15 segundos si llegó algo -->
+    <script th:src="@{/js/alertas.js}" defer></script>
+</th:block>
+
+</body>
+</html>

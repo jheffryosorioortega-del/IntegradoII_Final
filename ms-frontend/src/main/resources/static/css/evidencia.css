@@ -1,0 +1,68 @@
+/* ===================================================================
+   Fotos de evidencia.
+   1) Formulario público: elegir fotos y ver cómo quedan antes de enviar.
+   2) Ficha del panel: las fotos del cliente en una hoja de contacto con visor.
+   Usa las variables de color de cada zona (sitio público o panel).
+   =================================================================== */
+
+/* ---------- Formulario: zona para elegir fotos ---------- */
+.sgp-subir { position: relative; }
+.sgp-subir-input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.sgp-subir-zona {
+    display: grid; justify-items: center; gap: .35rem; text-align: center; margin: 0; padding: 1.35rem 1rem;
+    border: 2px dashed #8395a7; border-radius: 16px; background: #fff; cursor: pointer;
+    transition: border-color .15s, background-color .15s;
+}
+.sgp-subir-zona .bi { font-size: 1.9rem; line-height: 1; color: var(--sgp-acento-texto); }
+.sgp-subir-zona strong { color: var(--sgp-tinta); }
+.sgp-subir-zona small { max-width: 34rem; color: #4a5568; }
+.sgp-subir-zona:hover, .sgp-subir.arrastrando .sgp-subir-zona { border-color: var(--sgp-acento); background: #fff8ee; }
+.sgp-subir-input:focus-visible + .sgp-subir-zona { outline: 3px solid var(--sgp-azul); outline-offset: 2px; border-color: var(--sgp-acento); }
+.sgp-subir.llena .sgp-subir-zona { opacity: .6; }
+
+.sgp-subir-lista { list-style: none; margin: .85rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: .65rem; }
+.sgp-subir-lista:empty { display: none; }
+.sgp-subir-lista li { position: relative; aspect-ratio: 1; border-radius: 14px; overflow: hidden; background: #e9eef4; }
+.sgp-subir-lista img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sgp-subir-quitar {
+    position: absolute; top: .35rem; right: .35rem; width: 1.9rem; height: 1.9rem; display: grid; place-items: center;
+    border: 2px solid #fff; border-radius: 50%; background: var(--sgp-tinta); color: #fff; font-size: .8rem; line-height: 1; cursor: pointer;
+}
+.sgp-subir-quitar:hover { background: #c8372d; }
+.sgp-subir-quitar:focus-visible { outline: 3px solid var(--sgp-acento); outline-offset: 2px; }
+.sgp-subir-estado.error { color: #b42318; font-weight: 700; }
+
+/* ---------- Ficha: hoja de contacto ---------- */
+.sgp-evid-cab { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; }
+.sgp-evid-n { font-weight: 800; font-size: .85rem; color: var(--sgp-tinta); background: color-mix(in srgb, var(--sgp-acento) 22%, #fff); padding: .18rem .65rem; border-radius: 999px; }
+.sgp-fotos { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
+@media (min-width: 576px) { .sgp-fotos { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.sgp-fotos li { aspect-ratio: 1; min-width: 0; }
+.sgp-fotos li:first-child:not(:only-child) { grid-column: span 2; }
+@media (min-width: 576px) { .sgp-fotos li:first-child:not(:only-child) { grid-row: span 2; } }
+.sgp-fotos li:only-child { grid-column: 1 / -1; aspect-ratio: 16 / 10; }
+.sgp-foto { position: relative; display: block; width: 100%; height: 100%; padding: 0; border: 0; border-radius: 14px; overflow: hidden; background: #dfe7f1; cursor: zoom-in; }
+.sgp-foto img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s ease; }
+.sgp-foto:hover img { transform: scale(1.04); }
+.sgp-foto::after { content: ""; position: absolute; inset: 0; border-radius: 14px; box-shadow: inset 0 0 0 0 var(--sgp-acento); transition: box-shadow .15s; pointer-events: none; }
+.sgp-foto:hover::after, .sgp-foto:focus-visible::after { box-shadow: inset 0 0 0 4px var(--sgp-acento); }
+.sgp-foto:focus-visible { outline: 3px solid var(--sgp-azul); outline-offset: 2px; }
+.sgp-vacio-chico { padding: 1.4rem 1rem; }
+
+/* ---------- Visor de foto ---------- */
+.sgp-visor { width: min(96vw, 1100px); max-height: 94vh; padding: 0; border: 0; border-radius: 18px; background: #04142e; color: #fff; overflow: hidden; }
+.sgp-visor::backdrop { background: rgba(4, 20, 46, .86); }
+.sgp-visor figure { margin: 0; display: grid; }
+.sgp-visor img { display: block; width: 100%; max-height: calc(94vh - 3.4rem); object-fit: contain; background: #04142e; }
+.sgp-visor figcaption { padding: .8rem 1.2rem; font-size: .9rem; color: #d3e0f2; overflow-wrap: anywhere; }
+.sgp-visor-btn {
+    position: absolute; display: grid; place-items: center; width: 2.8rem; height: 2.8rem; border: 0; border-radius: 50%;
+    background: rgba(4, 20, 46, .72); color: #fff; font-size: 1.15rem; cursor: pointer;
+}
+.sgp-visor-btn:hover { background: var(--sgp-acento); color: #15294a; }
+.sgp-visor-btn:focus-visible { outline: 3px solid var(--sgp-acento); outline-offset: 2px; }
+.sgp-visor-x { top: .8rem; right: .8rem; }
+.sgp-visor-ant { left: .8rem; top: 45%; }
+.sgp-visor-sig { right: .8rem; top: 45%; }
+.sgp-visor.una .sgp-visor-ant, .sgp-visor.una .sgp-visor-sig { display: none; }
+@media (prefers-reduced-motion: reduce) { .sgp-foto img { transition: none; } }

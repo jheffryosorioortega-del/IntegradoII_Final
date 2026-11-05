@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Servicios')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: cabeceraPortal('servicios')}"></header>
+
+<section class="sgp-titulo sgp-titulo-1">
+    <div class="container">
+        <h1 class="display-5" data-split>Servicios</h1>
+        <p class="mb-0 lead" data-anim="up" data-delay="0.25">Soluciones técnicas para hogares y empresas.</p>
+    </div>
+</section>
+
+<section class="sgp-section">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" data-stagger="3">
+            <div class="col" th:each="s : ${servicios}">
+                <article class="card sgp-card h-100">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <img class="mb-3" th:src="@{'/img/icons/' + ${s.icono} + '.svg'}" alt="" width="56" height="56">
+                        <h2 class="h5 card-title" th:text="${s.etiqueta}">Servicio</h2>
+                        <p class="card-text" th:text="${s.descripcion}">Descripción</p>
+                        <a class="stretched-link mt-auto" th:href="@{/contacto(categoria=${s.name()})}">
+                            Solicitar este servicio <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="sgp-quote">
+    <div class="container py-3 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+        <div>
+            <h2 class="h5 mb-0">¿No encuentras lo que buscas?</h2>
+            <small>Cuéntanos tu caso y lo evaluamos igual.</small>
+        </div>
+        <a class="btn btn-primary" th:href="@{/contacto}">Escríbenos</a>
+    </div>
+</section>
+
+<footer th:replace="~{fragments/layout :: pieportal}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+<script th:src="@{/js/animaciones.js}" defer></script>
+</body>
+</html>

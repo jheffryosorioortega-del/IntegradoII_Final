@@ -1,0 +1,359 @@
+[
+ {
+  "id": "V-01",
+  "caso": "API clientes: Nombre con números ('Juan123')",
+  "esperado": "HTTP 400 con error en «nombre»",
+  "obtenido": "HTTP 400; campos con error: ['nombre']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-02",
+  "caso": "API clientes: Nombre solo números ('12345')",
+  "esperado": "HTTP 400 con error en «nombre»",
+  "obtenido": "HTTP 400; campos con error: ['nombre']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-03",
+  "caso": "API clientes: Nombre con etiqueta HTML",
+  "esperado": "HTTP 400 con error en «nombre»",
+  "obtenido": "HTTP 400; campos con error: ['nombre']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-04",
+  "caso": "API clientes: Nombre de 1 letra",
+  "esperado": "HTTP 400 con error en «nombre»",
+  "obtenido": "HTTP 400; campos con error: ['nombre']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-05",
+  "caso": "API clientes: Nombre de 61 letras",
+  "esperado": "HTTP 400 con error en «nombre»",
+  "obtenido": "HTTP 400; campos con error: ['nombre']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-06",
+  "caso": "API clientes: Nombre con símbolos ('Ana@Torres')",
+  "esperado": "HTTP 400 con error en «nombre»",
+  "obtenido": "HTTP 400; campos con error: ['nombre']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-07",
+  "caso": "API clientes: Teléfono con letras ('abcdefghi')",
+  "esperado": "HTTP 400 con error en «telefono»",
+  "obtenido": "HTTP 400; campos con error: ['telefono']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-08",
+  "caso": "API clientes: Teléfono mezcla letras y números ('98765abcd')",
+  "esperado": "HTTP 400 con error en «telefono»",
+  "obtenido": "HTTP 400; campos con error: ['telefono']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-09",
+  "caso": "API clientes: Teléfono con signo + ('+51987654321')",
+  "esperado": "HTTP 400 con error en «telefono»",
+  "obtenido": "HTTP 400; campos con error: ['telefono']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-10",
+  "caso": "API clientes: Teléfono con espacios ('987 654 321')",
+  "esperado": "HTTP 400 con error en «telefono»",
+  "obtenido": "HTTP 400; campos con error: ['telefono']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-11",
+  "caso": "API clientes: Teléfono de 8 dígitos que empieza con 9",
+  "esperado": "HTTP 400 con error en «telefono»",
+  "obtenido": "HTTP 400; campos con error: ['telefono']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-12",
+  "caso": "API clientes: Teléfono de 9 dígitos que empieza con 8",
+  "esperado": "HTTP 400 con error en «telefono»",
+  "obtenido": "HTTP 400; campos con error: ['telefono']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-13",
+  "caso": "API clientes: Teléfono de 10 dígitos",
+  "esperado": "HTTP 400 con error en «telefono»",
+  "obtenido": "HTTP 400; campos con error: ['telefono']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-14",
+  "caso": "API clientes: Correo sin arroba",
+  "esperado": "HTTP 400 con error en «correo»",
+  "obtenido": "HTTP 400; campos con error: ['correo']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-15",
+  "caso": "API clientes: Dirección con etiqueta HTML",
+  "esperado": "HTTP 400 con error en «direccion»",
+  "obtenido": "HTTP 400; campos con error: ['direccion']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-16",
+  "caso": "API clientes: Distrito con números ('Lima2')",
+  "esperado": "HTTP 400 con error en «distrito»",
+  "obtenido": "HTTP 400; campos con error: ['distrito']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-17",
+  "caso": "API clientes: Celular válido de 9 dígitos con nombre con tilde y ñ",
+  "esperado": "HTTP 201 (aceptado)",
+  "obtenido": "HTTP 201",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-18",
+  "caso": "API clientes: Teléfono fijo válido de 7 dígitos",
+  "esperado": "HTTP 201 (aceptado)",
+  "obtenido": "HTTP 201",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-19",
+  "caso": "API clientes: Teléfono fijo válido de 8 dígitos",
+  "esperado": "HTTP 201 (aceptado)",
+  "obtenido": "HTTP 201",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-20",
+  "caso": "API clientes: teléfono repetido",
+  "esperado": "HTTP 409",
+  "obtenido": "HTTP 409",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-21",
+  "caso": "API clientes: cuerpo que no es JSON",
+  "esperado": "HTTP 400 (no 500)",
+  "obtenido": "HTTP 400",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-22",
+  "caso": "API solicitudes: solicitud válida",
+  "esperado": "HTTP 201 con código SOL-xxxxxx",
+  "obtenido": "HTTP 201; código: SOL-000001",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-23",
+  "caso": "API solicitudes: nombre con números",
+  "esperado": "HTTP 400 con error en «nombre»",
+  "obtenido": "HTTP 400; campos con error: ['nombre']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-24",
+  "caso": "API solicitudes: teléfono con letras",
+  "esperado": "HTTP 400 con error en «telefono»",
+  "obtenido": "HTTP 400; campos con error: ['telefono']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-25",
+  "caso": "API solicitudes: descripción demasiado corta",
+  "esperado": "HTTP 400 con error en «descripcion»",
+  "obtenido": "HTTP 400; campos con error: ['descripcion']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-26",
+  "caso": "API solicitudes: descripción con < >",
+  "esperado": "HTTP 400 con error en «descripcion»",
+  "obtenido": "HTTP 400; campos con error: ['descripcion']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-27",
+  "caso": "API solicitudes: dirección con símbolos peligrosos",
+  "esperado": "HTTP 400 con error en «direccion»",
+  "obtenido": "HTTP 400; campos con error: ['direccion']",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-28",
+  "caso": "API solicitudes: categoría que no existe",
+  "esperado": "HTTP 400 (no 500)",
+  "obtenido": "HTTP 400",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-29",
+  "caso": "10 solicitudes simultáneas con el mismo teléfono nuevo",
+  "esperado": "Todas HTTP 201 y un solo cliente creado",
+  "obtenido": "códigos: [201] (10 respuestas); clientes con ese teléfono: 1",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-30",
+  "caso": "Pantalla Solicitar servicio: nombre con números",
+  "esperado": "Se queda en el formulario con el error y no crea nada",
+  "obtenido": "HTTP 200; mensaje del nombre visible: True; marcado is-invalid: True; solicitudes 11→11",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-31",
+  "caso": "Pantalla Solicitar servicio: teléfono con letras",
+  "esperado": "Error de teléfono visible",
+  "obtenido": "HTTP 200; mensaje visible: True",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-32",
+  "caso": "Pantalla Solicitar servicio: datos válidos",
+  "esperado": "Redirige a la confirmación con código",
+  "obtenido": "HTTP 302; código: SOL-000012",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-33",
+  "caso": "Login del Coordinador (ms-usuarios con su base de datos)",
+  "esperado": "Redirige a /panel",
+  "obtenido": "HTTP 302 → /panel",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-34",
+  "caso": "Login con contraseña incorrecta",
+  "esperado": "Redirige a /login?error",
+  "obtenido": "HTTP 302 → /login?error",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-35",
+  "caso": "Panel Nuevo cliente: nombre con números",
+  "esperado": "Error del nombre",
+  "obtenido": "HTTP 200; mensaje visible: True",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-36",
+  "caso": "Panel Nuevo cliente: teléfono con letras",
+  "esperado": "Error del teléfono",
+  "obtenido": "HTTP 200; mensaje visible: True",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-37",
+  "caso": "Panel Nuevo cliente: datos válidos",
+  "esperado": "Guarda y redirige al listado",
+  "obtenido": "HTTP 302 → /panel/clientes",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-38",
+  "caso": "Panel Nuevo cliente: teléfono repetido",
+  "esperado": "Aviso de duplicado",
+  "obtenido": "HTTP 200; aviso visible: True",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-39",
+  "caso": "Cabeceras de seguridad en las respuestas",
+  "esperado": "CSP, X-Frame-Options, nosniff y Referrer-Policy presentes",
+  "obtenido": "CSP: sí; X-Frame-Options: DENY; nosniff: nosniff; Referrer-Policy: strict-origin-when-cross-origin",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-40",
+  "caso": "Cookie de sesión protegida",
+  "esperado": "HttpOnly y SameSite=Lax",
+  "obtenido": "Set-Cookie: JSESSIONID=919687C03D75F9860E1C1D26F32EB5A5; Path=/; HttpOnly; SameSite=Lax",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-41",
+  "caso": "Recurso estático bootstrap.min.css",
+  "esperado": "HTTP 200",
+  "obtenido": "HTTP 200; 232803 bytes",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-42",
+  "caso": "Recurso estático bootstrap.bundle.min.js",
+  "esperado": "HTTP 200",
+  "obtenido": "HTTP 200; 80721 bytes",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-43",
+  "caso": "Recurso estático bootstrap-icons.min.css",
+  "esperado": "HTTP 200",
+  "obtenido": "HTTP 200; 85875 bytes",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-44",
+  "caso": "Recurso estático bootstrap-icons.woff2",
+  "esperado": "HTTP 200",
+  "obtenido": "HTTP 200; 130396 bytes",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-45",
+  "caso": "Recurso estático site.css",
+  "esperado": "HTTP 200",
+  "obtenido": "HTTP 200; 10156 bytes",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-46",
+  "caso": "Recurso estático validacion.js",
+  "esperado": "HTTP 200",
+  "obtenido": "HTTP 200; 6760 bytes",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-47",
+  "caso": "Técnico abre Clientes: página de error amigable",
+  "esperado": "HTTP 403 con mensaje claro (no la página técnica de Spring)",
+  "obtenido": "HTTP 403; mensaje amigable: True; página técnica 'Whitelabel': False",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-48",
+  "caso": "Ruta inexistente: página de error amigable",
+  "esperado": "HTTP 404 con mensaje claro",
+  "obtenido": "HTTP 404; mensaje amigable: True",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-49",
+  "caso": "Formulario público: campo Teléfono con límites del navegador",
+  "esperado": "inputmode numérico, maxlength 9, pattern y filtro de teclas",
+  "obtenido": "inputmode=numeric: True; maxlength=9: True; pattern: True; data-filtro=telefono: True",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-50",
+  "caso": "Formulario público: campo Nombre con límites del navegador",
+  "esperado": "pattern, maxlength 60 y filtro de teclas",
+  "obtenido": "pattern: True; maxlength=60: True; data-filtro=nombre: True",
+  "estado": "Aprobado"
+ },
+ {
+  "id": "V-51",
+  "caso": "Panel Nuevo cliente: campos Nombre y Teléfono con límites del navegador",
+  "esperado": "Mismos límites que el formulario público",
+  "obtenido": "teléfono con inputmode/maxlength/filtro: True; nombre con filtro: True",
+  "estado": "Aprobado"
+ }
+]

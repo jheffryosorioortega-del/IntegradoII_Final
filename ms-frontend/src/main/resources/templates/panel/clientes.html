@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Clientes')}"></head>
+<body class="sgp-panel-body">
+<div class="d-lg-flex min-vh-100">
+    <th:block th:replace="~{fragments/layout :: menuPanel('clientes')}"></th:block>
+    <main class="flex-grow-1 sgp-main">
+
+        <div class="sgp-saludo">
+            <div>
+                <h1>Clientes</h1>
+                <p th:text="${#lists.size(clientes)} + (${#lists.size(clientes) == 1} ? ' cliente registrado' : ' clientes registrados')">8 clientes registrados</p>
+            </div>
+            <a class="btn btn-primary" th:href="@{/panel/clientes/nuevo}"><i class="bi bi-person-plus me-1"></i>Nuevo cliente</a>
+        </div>
+
+        <section class="sgp-box plana" aria-label="Lista de clientes">
+            <div class="table-responsive" th:unless="${#lists.isEmpty(clientes)}">
+                <table class="table table-hover align-middle mb-0 sgp-tabla">
+                    <thead><tr><th>Nombre</th><th>Teléfono</th><th>Correo</th><th>Dirección</th><th>Distrito</th></tr></thead>
+                    <tbody>
+                        <tr th:each="c : ${clientes}">
+                            <td><span class="sgp-persona"><span class="sgp-avatar" aria-hidden="true" th:text="${#strings.isEmpty(c.nombre)} ? '?' : ${#strings.toUpperCase(#strings.substring(c.nombre, 0, 1))}">J</span><span th:text="${c.nombre}">Nombre</span></span></td>
+                            <td th:text="${c.telefono}">999</td>
+                            <td th:text="${c.correo}">correo</td>
+                            <td th:text="${c.direccion}">Dirección</td>
+                            <td th:text="${c.distrito}">Distrito</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="sgp-vacio" th:if="${#lists.isEmpty(clientes)}">
+                <i class="bi bi-people"></i>
+                <strong>Aún no hay clientes</strong>
+                Se crean solos cuando llega una solicitud, o puedes registrar uno ahora.
+                <div><a class="btn btn-primary btn-sm" th:href="@{/panel/clientes/nuevo}">Registrar cliente</a></div>
+            </div>
+        </section>
+    </main>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

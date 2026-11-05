@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Nuevo cliente')}"></head>
+<body class="sgp-panel-body">
+<div class="d-lg-flex min-vh-100">
+    <th:block th:replace="~{fragments/layout :: menuPanel('clientes')}"></th:block>
+    <main class="flex-grow-1 p-3 p-lg-4 overflow-x-hidden">
+        <h1 class="h2 mb-4">Nuevo cliente</h1>
+
+        <div class="card shadow-sm sgp-form-card">
+            <div class="card-body p-4">
+                <form th:action="@{/panel/clientes}" th:object="${cliente}" method="post" class="row g-3 needs-validation" novalidate>
+
+                    <div class="col-12" th:if="${#fields.hasGlobalErrors()}">
+                        <div class="alert alert-danger mb-0" role="alert" th:each="e : ${#fields.globalErrors()}" th:text="${e}"></div>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="nombre" class="form-label">Nombre completo <span class="text-danger">*</span></label>
+                        <input id="nombre" type="text" th:field="*{nombre}" class="form-control"
+                               th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid'"
+                               th:pattern="${@reglas.nombre}" minlength="2" maxlength="60" required
+                               autocomplete="off" data-filtro="nombre" placeholder="Ej.: Juan Pérez">
+                        <div class="form-text">Solo letras y espacios; no se permiten números.</div>
+                        <div class="invalid-feedback" th:text="${#fields.hasErrors('nombre')} ? ${#fields.errors('nombre')[0]} : ${@reglas.msgNombre}"></div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="telefono" class="form-label">Teléfono <span class="text-danger">*</span></label>
+                        <input id="telefono" type="tel" th:field="*{telefono}" class="form-control"
+                               th:classappend="${#fields.hasErrors('telefono')} ? 'is-invalid'"
+                               th:pattern="${@reglas.telefono}" inputmode="numeric" maxlength="9" required
+                               autocomplete="off" data-filtro="telefono" placeholder="987654321">
+                        <div class="form-text">Solo números: celular de 9 dígitos (empieza con 9) o fijo de 7 u 8.</div>
+                        <div class="invalid-feedback" th:text="${#fields.hasErrors('telefono')} ? ${#fields.errors('telefono')[0]} : ${@reglas.msgTelefono}"></div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="correo" class="form-label">Correo <span class="text-body-secondary">(opcional)</span></label>
+                        <input id="correo" type="email" th:field="*{correo}" class="form-control"
+                               th:classappend="${#fields.hasErrors('correo')} ? 'is-invalid'"
+                               th:pattern="${@reglas.correo}" maxlength="120" autocomplete="off" data-filtro="correo"
+                               placeholder="nombre@dominio.com">
+                        <div class="invalid-feedback" th:text="${#fields.hasErrors('correo')} ? ${#fields.errors('correo')[0]} : ${@reglas.msgCorreo}"></div>
+                    </div>
+
+                    <div class="col-md-7">
+                        <label for="direccion" class="form-label">Dirección</label>
+                        <input id="direccion" type="text" th:field="*{direccion}" class="form-control"
+                               th:classappend="${#fields.hasErrors('direccion')} ? 'is-invalid'"
+                               th:pattern="${@reglas.direccion}" minlength="5" maxlength="120" autocomplete="off"
+                               data-filtro="direccion" placeholder="Jr. Las Flores 456">
+                        <div class="form-text">Letras, números y . , # ° / -</div>
+                        <div class="invalid-feedback" th:text="${#fields.hasErrors('direccion')} ? ${#fields.errors('direccion')[0]} : ${@reglas.msgDireccion}"></div>
+                    </div>
+
+                    <div class="col-md-5">
+                        <label for="distrito" class="form-label">Distrito</label>
+                        <input id="distrito" type="text" th:field="*{distrito}" class="form-control"
+                               th:classappend="${#fields.hasErrors('distrito')} ? 'is-invalid'"
+                               th:pattern="${@reglas.distrito}" maxlength="40" autocomplete="off"
+                               data-filtro="distrito" placeholder="Miraflores">
+                        <div class="form-text">Solo letras.</div>
+                        <div class="invalid-feedback" th:text="${#fields.hasErrors('distrito')} ? ${#fields.errors('distrito')[0]} : ${@reglas.msgDistrito}"></div>
+                    </div>
+
+                    <div class="col-12 d-grid d-sm-flex gap-2 pt-2">
+                        <button class="btn btn-primary px-4" type="submit"><i class="bi bi-save me-1"></i>Guardar</button>
+                        <a th:href="@{/panel/clientes}" class="btn btn-outline-dark">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

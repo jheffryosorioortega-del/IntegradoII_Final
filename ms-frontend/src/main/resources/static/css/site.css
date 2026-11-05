@@ -1,0 +1,297 @@
+/* ===================================================================
+   SGP · Tema sobre Bootstrap 5
+   Bootstrap pone los componentes (navbar, grid, cards, formularios, tablas);
+   este archivo les da la identidad de SGP: negro grafito + ámbar, estilo "constructora".
+   =================================================================== */
+:root {
+    --sgp-tinta: #15294a;
+    --sgp-tinta-2: #1f3d6b;
+    --sgp-azul: #2f63a3;
+    --sgp-acento: #f5a02a;
+    --sgp-acento-2: #ffb547;
+    --sgp-acento-texto: #9a4d00;   /* naranja oscuro con buen contraste sobre blanco */
+
+    --bs-primary: #f5a02a;
+    --bs-primary-rgb: 245, 160, 42;
+    --bs-body-color: #1f2933;
+    --bs-link-color: #0a58b4;
+    --bs-link-hover-color: #08408a;
+    --bs-link-color-rgb: 10, 88, 180;
+    --bs-link-hover-color-rgb: 8, 64, 138;
+    --bs-border-radius: .45rem;
+    /* Tipografía: Ruda para el texto y Aleo (slab serif) para títulos y cifras */
+    --sgp-font-titulo: "Aleo", Georgia, "Times New Roman", serif;
+    --bs-body-font-family: "Ruda", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .display-1, .display-2, .display-3, .display-4, .display-5, .display-6,
+.sgp-brand-mark, .sgp-stat .num, .sgp-kpi .num, .navbar-brand { font-family: var(--sgp-font-titulo); }
+
+body { background: #fff; }
+h1, h2, h3, h4, .display-1, .display-2, .display-3, .display-4, .display-5, .display-6 { font-weight: 700; }
+
+/* ---------- Botón principal: ámbar con texto oscuro (contraste AA) ---------- */
+.btn-primary {
+    --bs-btn-color: #16191d;
+    --bs-btn-bg: #f5a02a;
+    --bs-btn-border-color: #f5a02a;
+    --bs-btn-hover-color: #16191d;
+    --bs-btn-hover-bg: #ffb547;
+    --bs-btn-hover-border-color: #ffb547;
+    --bs-btn-active-color: #16191d;
+    --bs-btn-active-bg: #e69213;
+    --bs-btn-active-border-color: #e69213;
+    --bs-btn-disabled-color: #16191d;
+    --bs-btn-disabled-bg: #f5a02a;
+    --bs-btn-disabled-border-color: #f5a02a;
+    --bs-btn-focus-shadow-rgb: 245, 160, 42;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+}
+.btn-outline-light:hover { color: var(--sgp-tinta); }
+.text-bg-primary { color: #16191d !important; }   /* insignias ámbar: texto oscuro */
+.text-sgp { color: var(--sgp-acento-texto) !important; }
+
+/* ---------- Campos de formulario ---------- */
+.form-control:focus, .form-select:focus {
+    border-color: var(--sgp-acento);
+    box-shadow: 0 0 0 .25rem rgba(245, 160, 42, .35);
+}
+.form-control, .form-select { border-color: #8395a7; }
+.form-label { font-weight: 600; }
+/* Aviso al intentar escribir un carácter no permitido (ver validacion.js): borde rojo y un pequeño temblor */
+.sgp-rechazo { border-color: #dc3545 !important; box-shadow: 0 0 0 .2rem rgba(220, 53, 69, .25) !important; animation: sgp-temblor .25s; }
+@keyframes sgp-temblor { 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+@media (prefers-reduced-motion: reduce) { .sgp-rechazo { animation: none; } }
+.form-text { color: #52606d; }
+
+/* ---------- Navbar del portal ---------- */
+.sgp-navbar { min-height: 68px; transition: box-shadow .2s; }
+.sgp-navbar.scrolled { box-shadow: 0 2px 14px rgba(0, 0, 0, .09); }
+.sgp-brand { display: flex; flex-direction: column; line-height: 1; padding: 0; }
+.sgp-brand-mark { font-size: 1.8rem; font-weight: 800; letter-spacing: 2px; color: var(--sgp-tinta); }
+.sgp-brand small { font-size: .66rem; letter-spacing: .5px; color: #52606d; text-transform: uppercase; margin-top: 2px; }
+/* Logo de la empresa (imagen con fondo transparente) */
+.sgp-logo { height: 46px; width: auto; max-width: 100%; display: block; }
+.sgp-logo-login { height: 58px; }
+.sgp-logo-chip { display: inline-block; background: #fff; border-radius: .5rem; padding: .4rem .7rem; }
+.sgp-logo-chip .sgp-logo { height: 40px; }
+@media (max-width: 575.98px) { .sgp-logo { height: 38px; } .sgp-logo-login { height: 50px; } }
+.sgp-navbar .nav-link {
+    font-weight: 600; font-size: .9rem; text-transform: uppercase; letter-spacing: .4px;
+    color: var(--bs-body-color); border-bottom: 2px solid transparent;
+}
+.sgp-navbar .nav-link:hover, .sgp-navbar .nav-link.active { color: var(--sgp-acento-texto); border-bottom-color: var(--sgp-acento); }
+
+/* Botones en mayúsculas con algo de espaciado */
+.btn { text-transform: uppercase; letter-spacing: .05em; font-weight: 700; }
+
+/* Menú en móvil: opciones grandes y fáciles de tocar */
+@media (max-width: 991.98px) {
+    .sgp-navbar .navbar-collapse { padding: .25rem 0 1rem; }
+    .sgp-navbar .nav-link { padding: .9rem .25rem; font-size: 1rem; border-bottom: 1px solid #e6ebf0; }
+    .sgp-navbar .nav-item:last-child .btn { width: 100%; padding: .7rem 1rem; }
+}
+
+/* ---------- Hero (carrusel de Bootstrap) ---------- */
+.sgp-hero { background: var(--sgp-tinta); color: #fff; }
+.sgp-slide { position: relative; background-size: cover; background-position: center; background-repeat: no-repeat; }
+.sgp-slide::before {
+    content: ""; position: absolute; inset: 0;
+    background: rgba(0, 0, 0, .22);
+}
+/* Fotos reales en el carrusel; el degradado de ::before mantiene legible el texto */
+.sgp-slide-1 { background-image: url("../img/servicio-bano.jpg"); background-position: center 60%; }
+.sgp-slide-2 { background-image: url("../img/servicio-cisterna.jpg"); background-position: center 40%; }
+.sgp-slide-3 { background-image: url("../img/servicio-terma.jpg"); background-position: center 35%; }
+.sgp-slide::before {
+    background: rgba(0, 0, 0, .22);
+}
+.sgp-slide-inner { position: relative; min-height: clamp(520px, 78vh, 760px); padding: 3rem 0 4rem; }   /* hero casi a pantalla completa */
+.sgp-slide h1 { max-width: 820px; text-shadow: 0 2px 14px rgba(0,0,0,.65), 0 1px 3px rgba(0,0,0,.6); font-size: clamp(1.9rem, 5.2vw, 3.2rem); line-height: 1.15; }
+.sgp-slide .lead { max-width: 580px; color: #fff; text-shadow: 0 1px 10px rgba(0,0,0,.7), 0 1px 2px rgba(0,0,0,.6); }
+.sgp-kicker {
+    display: inline-flex; align-items: center; gap: .5rem; margin: 0 0 .5rem;
+    color: var(--sgp-acento); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: .82rem;
+}
+.sgp-kicker::before { content: ""; width: 26px; height: 2px; background: var(--sgp-acento); display: inline-block; }
+.sgp-kicker.oscuro { color: var(--sgp-acento-texto); }
+.sgp-kicker.oscuro::before { background: var(--sgp-acento-texto); }
+.sgp-hero .carousel-indicators [data-bs-target] { background-color: var(--sgp-acento); }
+
+/* ---------- Barra de cotización ---------- */
+.sgp-quote { background: var(--sgp-tinta-2); color: #fff; }
+.sgp-quote small { color: #bcd0ee; }
+
+/* ---------- Franja de confianza ---------- */
+.sgp-trust {
+    color: #fff; border-top: 4px solid var(--sgp-acento);
+    background: var(--sgp-azul);
+}
+.sgp-trust strong, .sgp-trust .item > :first-child { text-shadow: 0 1px 0 rgba(4, 18, 48, .35); }
+.sgp-trust .item { border-left: 3px solid var(--sgp-acento); padding: .25rem 1rem; }
+.sgp-trust small { color: #e6f1ff; }
+
+/* ---------- Secciones ---------- */
+.sgp-section { padding: 4rem 0; }
+.sgp-section.alt { background: #f3f6f9; }
+.sgp-section.dark { background: var(--sgp-tinta); color: #fff; }
+.sgp-about-img { width: 100%; height: auto; border-radius: .75rem; box-shadow: 0 16px 34px rgba(0, 0, 0, .25); }
+
+/* ---------- Collage de fotos ("Somos") ---------- */
+.sgp-collage { position: relative; padding-bottom: 2.5rem; }
+.sgp-collage img { display: block; height: auto; object-fit: cover; border-radius: .75rem; box-shadow: 0 16px 34px rgba(0, 0, 0, .25); }
+.sgp-collage-a { width: 82%; aspect-ratio: 4 / 3; object-position: 60% center; }
+.sgp-collage-b { position: absolute; right: 0; bottom: 0; width: 52%; aspect-ratio: 4 / 3; object-position: 70% center;
+                 border: 6px solid #fff; }
+
+/* ---------- Comparador antes / después ---------- */
+.sgp-ba {
+    --pos: 50%; position: relative; width: 100%; max-width: 520px; margin: 0 auto; aspect-ratio: 683 / 715; overflow: hidden;
+    border-radius: .75rem; background: var(--sgp-tinta); box-shadow: 0 16px 34px rgba(0, 0, 0, .25);
+    cursor: ew-resize; touch-action: pan-y; user-select: none; -webkit-user-select: none;
+}
+.sgp-ba img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
+.sgp-ba-antes { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+.sgp-ba-linea { position: absolute; top: 0; bottom: 0; left: var(--pos); width: 3px; margin-left: -1.5px; background: #fff; box-shadow: 0 0 8px rgba(0, 0, 0, .45); }
+.sgp-ba-asa {
+    position: absolute; top: 50%; left: var(--pos); width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: .8rem;
+    background: var(--sgp-acento); color: var(--sgp-tinta); border: 3px solid #fff; box-shadow: 0 4px 14px rgba(0, 0, 0, .4);
+    transition: transform .15s;
+}
+.sgp-ba.arrastrando .sgp-ba-asa { transform: scale(1.12); }
+.sgp-ba:focus-within .sgp-ba-asa { outline: 3px solid var(--sgp-azul); outline-offset: 2px; }
+.sgp-ba-tag {
+    position: absolute; bottom: 1rem; padding: .3rem .75rem; border-radius: .3rem; pointer-events: none;
+    background: rgba(10, 12, 15, .8); color: #fff; font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .5px;
+}
+.sgp-ba-tag.antes { left: 1rem; }
+.sgp-ba-tag.despues { right: 1rem; }
+@media (prefers-reduced-motion: reduce) { .sgp-ba-asa { transition: none; } }
+
+/* ---------- Contadores ---------- */
+.sgp-stat { padding: 1.25rem 1rem; height: 100%; }
+.sgp-stat.oscuro { background: var(--sgp-tinta); color: #fff; }
+.sgp-stat.ambar { background: var(--sgp-acento); color: var(--sgp-tinta); }
+.sgp-stat .num { font-size: 2.2rem; font-weight: 800; line-height: 1; display: block; }
+.sgp-stat .etiqueta { font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
+
+/* ---------- Tarjetas de servicio ---------- */
+.sgp-card {
+    position: relative; overflow: hidden; border: 0; color: #fff;
+    background: var(--sgp-tinta-2);
+    box-shadow: 0 2px 10px rgba(4, 18, 48, .25); transition: transform .2s, box-shadow .2s;
+}
+.sgp-card::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--sgp-acento);
+    transform: scaleX(0); transform-origin: left; transition: transform .25s;
+}
+.sgp-card:hover { transform: translateY(-5px); box-shadow: 0 14px 28px rgba(0, 0, 0, .22); }
+.sgp-card:hover::after { transform: scaleX(1); }
+.sgp-card .card-text { color: #d3e3fa; font-size: .93rem; }
+.sgp-card a.stretched-link { color: var(--sgp-acento); font-weight: 700; text-decoration: none; }
+
+/* ---------- Pasos del proceso ---------- */
+.sgp-pasos { counter-reset: paso; }
+.sgp-pasos li { counter-increment: paso; }
+.sgp-pasos li > div { background: #f3f6f9; border-radius: .6rem; padding: 1rem; border-bottom: 3px solid var(--sgp-acento); }
+.sgp-pasos li > div::before {
+    content: counter(paso); display: inline-flex; width: 30px; height: 30px; align-items: center; justify-content: center;
+    background: var(--sgp-tinta); color: #fff; border-radius: 50%; font-weight: 700; margin-bottom: .5rem;
+}
+.sgp-pasos strong { display: block; }
+.sgp-pasos span { font-size: .92rem; color: #3e4c59; }
+
+/* ---------- Llamado a la acción y títulos de página ---------- */
+.sgp-cta { background: var(--sgp-tinta-2); color: #fff; padding: 3.5rem 0; }
+.sgp-cta p { color: #d6e5fa; }
+.sgp-titulo { position: relative; background: var(--sgp-tinta) center right / cover no-repeat; color: #fff; padding: 3.5rem 0; }
+.sgp-titulo::before { content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, .45); }
+.sgp-titulo > .container { position: relative; }
+.sgp-titulo-1 { background-image: url("../img/servicio-terma.jpg"); background-position: center 30%; }
+.sgp-codigo { background: #f3f6f9; padding: .15rem .7rem; border-radius: .35rem; font-weight: 700; }
+
+/* ---------- Pie ---------- */
+.sgp-footer { background: var(--sgp-tinta); color: #c3d4ee; }
+.sgp-footer a { color: #fff; }
+.sgp-footer h2 { font-size: 1rem; color: #fff; }
+
+/* ---------- Aparición al hacer scroll ---------- */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .sgp-card, .sgp-card::after { transition: none; }
+}
+
+/* ---------- Inicio de sesión ---------- */
+.sgp-login { min-height: 100vh; background: #f3f6f9; }
+.sgp-login-card { max-width: 900px; }
+.sgp-login-arte {
+    position: relative; min-height: 100%; color: #fff; background: var(--sgp-tinta) url("../img/login-herramientas.jpg") 20% center / cover no-repeat;
+}
+.sgp-login-arte::before { content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, .45); }
+.sgp-login-arte > div { position: relative; }
+
+/* ---------- Panel interno ---------- */
+.sgp-panel-body { background: #f3f6f9; }
+.sgp-sidebar { --bs-offcanvas-width: 270px; --bs-offcanvas-color: #fff; --bs-offcanvas-bg: var(--sgp-tinta); }
+.sgp-sidebar.offcanvas-lg { background-color: var(--sgp-tinta) !important; color: #fff; }
+@media (min-width: 992px) {
+    .sgp-sidebar { flex: 0 0 250px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+}
+.sgp-sidebar .sgp-brand-mark { color: #fff !important; }
+.sgp-sidebar .nav-link { color: #d3e2ee; border-radius: .4rem; padding: .6rem .85rem; }
+.sgp-sidebar .nav-link:hover, .sgp-sidebar .nav-link.active { background: rgba(255, 255, 255, .14); color: #fff; }
+.sgp-topbar { background: var(--sgp-tinta); }
+.sgp-kpi { border: 0; border-left: 5px solid var(--sgp-acento); box-shadow: 0 1px 4px rgba(0, 0, 0, .08); }
+.sgp-kpi .num { font-size: 1.9rem; font-weight: 800; color: var(--sgp-azul); line-height: 1.1; }
+.sgp-tabla thead th { background: #dfe9f1; white-space: nowrap; font-size: .85rem; }
+.sgp-tabla td { font-size: .92rem; }
+.badge { font-weight: 600; }
+
+/* Selector de persona natural / empresa del formulario público. */
+.sgp-tipo-tabs .nav-link { color: #25282c; padding: .9rem 1.1rem; font-weight: 600; }
+.sgp-tipo-tabs .nav-link.active { border-bottom: 3px solid #dca63b; }
+.sgp-tipo-tabs .nav-link:focus-visible { outline: 2px solid #b47d16; outline-offset: 2px; }
+#datos-empresa[hidden], #datos-persona[hidden], [data-empresa-extra][hidden] { display: none !important; }
+
+/* ===================================================================
+   Animaciones al hacer scroll (js/animaciones.js)
+   Todo cuelga de html.anim-js, que el <head> solo activa si el usuario NO pidió reducir el movimiento.
+   =================================================================== */
+html.anim-js [data-anim] {
+    opacity: 0; will-change: transform, opacity;
+    transition: opacity .9s cubic-bezier(.2, .7, .2, 1) var(--d, 0s), transform .9s cubic-bezier(.2, .7, .2, 1) var(--d, 0s);
+}
+html.anim-js [data-anim="up"]    { transform: translateY(46px); }
+html.anim-js [data-anim="left"]  { transform: translateX(-70px); }
+html.anim-js [data-anim="right"] { transform: translateX(70px); }
+html.anim-js [data-anim="zoom"]  { transform: scale(.92); }
+html.anim-js [data-anim].anim-in { opacity: 1; transform: none; }
+
+/* Títulos que entran palabra por palabra */
+html.anim-js [data-split]:not(.anim-split) { visibility: hidden; }
+.sgp-w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .18em; margin-bottom: -.18em; }
+.sgp-w > span { display: inline-block; transform: translateY(115%); transition: transform .8s cubic-bezier(.2, .7, .2, 1) calc(var(--d, 0s) + var(--i, 0) * .07s); }
+[data-split].anim-in .sgp-w > span { transform: none; }
+
+/* Texto del carrusel: entra escalonado cada vez que cambia la diapositiva */
+@keyframes sgp-hero-in { from { opacity: 0; transform: translateY(34px); } to { opacity: 1; transform: none; } }
+html.anim-js .sgp-slide.active .sgp-slide-inner .container > * { animation: sgp-hero-in 1s cubic-bezier(.2, .7, .2, 1) both; }
+html.anim-js .sgp-slide.active .sgp-slide-inner .container > :nth-child(1) { animation-delay: .15s; }
+html.anim-js .sgp-slide.active .sgp-slide-inner .container > :nth-child(2) { animation-delay: .3s; }
+html.anim-js .sgp-slide.active .sgp-slide-inner .container > :nth-child(3) { animation-delay: .5s; }
+html.anim-js .sgp-slide.active .sgp-slide-inner .container > :nth-child(4) { animation-delay: .7s; }
+.sgp-slide-inner > .container { will-change: transform, opacity; }
+
+/* Red de seguridad: si por algún motivo el script no corre, a los 4 s todo se muestra */
+@keyframes sgp-seguro { to { opacity: 1; transform: none; visibility: visible; } }
+html.anim-js:not(.anim-ready) [data-anim]:not(.anim-in), html.anim-js:not(.anim-ready) [data-split]:not(.anim-split) { animation: sgp-seguro 0s 4s forwards; }
+
+/* Los elementos que entran desde un costado no deben crear scroll horizontal */
+html.anim-js, html.anim-js body { overflow-x: clip; }
+
+/* Pie centrado */
+.sgp-footer .container { text-align: center; }

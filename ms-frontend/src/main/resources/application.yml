@@ -1,0 +1,53 @@
+server:
+  port: 8090
+  # "native": Tomcat toma la IP y el https reales de las cabeceras X-Forwarded-* SOLO si vienen de un proxy de confianza
+  # (red privada, como el contenedor de Caddy). Con "none" (local, sin proxy) esas cabeceras se ignoran.
+  forward-headers-strategy: ${SGP_FORWARD_HEADERS:none}
+  servlet:
+    session:
+      # Cookie de sesión: no accesible desde JavaScript y no se envía desde otros sitios.
+      cookie:
+        http-only: true
+        same-site: lax
+        # En producción (HTTPS) va en true: el navegador nunca la manda por una conexión sin cifrar.
+        # Local con http://localhost debe quedar en false o el login no guardaría la sesión.
+        secure: ${SGP_COOKIE_SECURE:false}
+      timeout: 30m
+  error:
+    # No mostrar detalles internos (trazas, mensajes de excepciones) al usuario.
+    include-message: never
+    include-stacktrace: never
+    include-binding-errors: never
+
+spring:
+  config:
+    import:
+      - optional:file:./.env[.properties]
+      - optional:file:../.env[.properties]
+  application:
+    name: ms-frontend
+  servlet:
+    multipart:
+      # Fotos de evidencia. La REGLA es "hasta 6 MB cada una" y la aplica PortalController con un mensaje claro.
+      # Este límite del contenedor va un poco más alto a propósito: si fuera igual, un envío más pesado fallaría
+      # dentro del filtro CSRF (que lee el formulario antes que el controlador) y el usuario vería un 403 en vez del aviso.
+      max-file-size: 10MB
+      max-request-size: 40MB
+  thymeleaf:
+    cache: false
+
+# Única URL que el Front-End conoce: el Gateway. No conoce los puertos
+# internos de ms-usuarios, ms-clientes ni ms-solicitudes.
+sgp:
+  gateway:
+    url: ${GATEWAY_URL:http://localhost:8080}
+  # Límites por IP contra abuso (ver config/LimiteIntentos). Se cuentan en memoria: se reinician al reiniciar el servicio.
+  limites:
+    login-fallos-por-ip: 10          # contraseñas erróneas desde una misma IP ...
+    login-fallos-por-correo: 15      # ... o contra un mismo correo (desde cualquier IP) ...
+    login-ventana-minutos: 10        # ... dentro de esta ventana bloquean nuevos intentos hasta que pase
+    envios-por-ip: 8                 # envíos del formulario desde una IP en la ventana corta (un envío con errores también cuenta)
+    envios-ventana-minutos: 10
+    envios-por-ip-dia: 30            # y en 24 horas
+    consultas-por-ip: 20             # consultas DNI/RUC (gastan cupo del proveedor) en la ventana
+    consultas-ventana-minutos: 10

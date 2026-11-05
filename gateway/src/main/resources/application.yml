@@ -1,0 +1,35 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway
+  config:
+    # La clave compartida SGP_API_KEY se lee del archivo .env (no se sube a GitHub).
+    import:
+      - optional:file:./.env[.properties]
+      - optional:file:../.env[.properties]
+  cloud:
+    gateway:
+      # Si un microservicio no contesta, el Gateway corta la espera y responde error
+      # en lugar de dejar al usuario esperando indefinidamente.
+      httpclient:
+        connect-timeout: 2000
+        response-timeout: 10s
+      # Rutas estáticas (sin Eureka, para mantenerlo simple de explicar):
+      # cada entrada dice "si la ruta empieza así, reenvíala a este microservicio".
+      routes:
+        # Las direcciones se pueden cambiar con variables de entorno (USUARIOS_URL, CLIENTES_URL, SOLICITUDES_URL),
+        # por ejemplo al ejecutar en contenedores; por defecto apuntan a localhost.
+        - id: ms-usuarios
+          uri: ${USUARIOS_URL:http://localhost:8081}
+          predicates:
+            - Path=/api/usuarios/**
+        - id: ms-clientes
+          uri: ${CLIENTES_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/clientes/**
+        - id: ms-solicitudes
+          uri: ${SOLICITUDES_URL:http://localhost:8083}
+          predicates:
+            - Path=/api/solicitudes/**

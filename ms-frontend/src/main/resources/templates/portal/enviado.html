@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Solicitud enviada')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: cabeceraPortal('contacto')}"></header>
+
+<section class="sgp-section">
+    <div class="container text-center">
+        <div class="mx-auto col-lg-6">
+            <i class="bi bi-check-circle-fill text-success display-3"></i>
+            <h1 class="display-6 mt-2">¡Solicitud registrada!</h1>
+            <p th:if="${codigo}" class="lead">Tu código de seguimiento es <strong class="sgp-codigo" th:text="${codigo}">SOL-000001</strong></p>
+            <p>Nos comunicaremos contigo para evaluar tu necesidad y enviarte la cotización.</p>
+            <p th:if="${fotosRecibidas != null}"><i class="bi bi-camera me-1"></i>Recibimos tus fotos; nos ayudarán a evaluar qué tan urgente es la visita.</p>
+            <p th:if="${fotosFallaron}" class="text-danger" role="alert">Tu solicitud quedó registrada, pero no pudimos recibir las fotos. Cuando te llamemos puedes enviárnoslas.</p>
+            <a class="btn btn-primary btn-lg" th:href="@{/}">Volver al inicio</a>
+        </div>
+    </div>
+</section>
+
+<footer th:replace="~{fragments/layout :: pieportal}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

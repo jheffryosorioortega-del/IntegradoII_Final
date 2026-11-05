@@ -1,0 +1,34 @@
+# Caddy: HTTPS automático y proxy inverso hacia el portal (ms-frontend). Lo usa docker-compose.prod.yml.
+#
+# El dominio llega de la variable SGP_DOMINIO. Con un dominio real, Caddy pide solo el certificado a Let's Encrypt (necesita
+# que los puertos 80 y 443 del servidor sean alcanzables desde internet) y lo renueva antes de que venza. Con "localhost"
+# usa un certificado propio de prueba (el navegador avisará que no es de confianza): sirve para probar en tu PC.
+#
+# Caddy añade X-Forwarded-For / X-Forwarded-Proto con la IP y el protocolo reales, y descarta los que traiga el visitante:
+# nadie puede falsear su IP para esquivar los límites de intentos.
+
+{$SGP_DOMINIO} {
+	encode zstd gzip
+
+	# El formulario acepta hasta 40 MB (4 fotos de 6 MB + datos, con margen). Lo más grande se corta aquí, antes de llegar a Java.
+	request_body {
+		max_size 45MB
+	}
+
+	reverse_proxy ms-frontend:8090 {
+		# Si el portal tarda en responder (arranque, fotos grandes) no se corta antes de tiempo.
+		transport http {
+			response_header_timeout 60s
+		}
+	}
+
+	header {
+		-Server
+		X-Content-Type-Options nosniff
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}

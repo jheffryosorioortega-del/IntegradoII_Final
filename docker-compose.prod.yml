@@ -1,0 +1,95 @@
+# SGP en PRODUCCIÓN (servidor público con HTTPS). Se usa JUNTO con docker-compose.yml, que sigue siendo la base:
+#
+#     docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+#
+# Para no escribir los dos -f cada vez, pon esta línea en el .env del servidor (en Linux el separador es ":"):
+#     COMPOSE_FILE=docker-compose.yml:docker-compose.prod.yml
+#
+# Qué cambia respecto al modo desarrollo:
+#   - Caddy es lo ÚNICO abierto a internet (80 y 443). Consigue y renueva solo el certificado HTTPS (Let's Encrypt).
+#   - El puerto 8090 del portal y el 5433 de PostgreSQL YA NO se publican: nadie llega a ellos desde afuera.
+#   - La cookie de sesión sale como "Secure" y el Front-End toma la IP real del visitante de las cabeceras del proxy,
+#     así que los límites de intentos cuentan por visitante y no por el proxy.
+#   - Un servicio de copias de seguridad guarda cada noche las 3 bases en ./backups (ver docker/backup/backup.sh).
+#   - Los registros de cada contenedor rotan (3 archivos de 10 MB): sin esto, el disco del servidor se llena con el tiempo.
+#
+# Requiere Docker Compose 2.24 o más nuevo (usa "!reset" para quitar los puertos de la base).
+
+x-logs: &logs
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+
+  # ---------- HTTPS + proxy inverso: la única puerta pública ----------
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    mem_limit: 128m
+    depends_on:
+      ms-frontend: { condition: service_healthy }
+    environment:
+      # El dominio (o subdominio) que apunta a este servidor, por ejemplo sgp-polanco.duckdns.org.
+      SGP_DOMINIO: ${SGP_DOMINIO:?Falta SGP_DOMINIO en el archivo .env (el dominio que apunta a este servidor)}
+    ports:
+      # Normalmente 80 y 443. Se pueden cambiar solo para probar en una PC que ya los usa.
+      - "${SGP_HTTP_PORT:-80}:80"
+      - "${SGP_HTTPS_PORT:-443}:443"
+      - "${SGP_HTTPS_PORT:-443}:443/udp"      # HTTP/3
+    volumes:
+      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data                        # aquí vive el certificado: si se borra, se vuelve a pedir (hay límite de pedidos por semana)
+      - caddy_config:/config
+    logging: *logs
+
+  # ---------- Servicios de la aplicación ----------
+  ms-frontend:
+    ports: !reset []                            # el portal solo se alcanza a través de Caddy
+    environment:
+      SGP_COOKIE_SECURE: "true"
+      SGP_FORWARD_HEADERS: native
+    logging: *logs
+
+  postgres:
+    ports: !reset []                            # la base no se publica; para mirarla usa un túnel SSH (ver docs/DESPLIEGUE_GCP.md)
+    logging: *logs
+
+  ms-usuarios:
+    logging: *logs
+  ms-clientes:
+    logging: *logs
+  ms-solicitudes:
+    logging: *logs
+  gateway:
+    logging: *logs
+
+  # ---------- Copias de seguridad ----------
+  backup:
+    image: postgres:16                          # trae pg_dump / pg_restore de la misma versión que la base
+    restart: unless-stopped
+    mem_limit: 128m
+    entrypoint: ["/bin/bash", "/backup.sh"]
+    depends_on:
+      postgres: { condition: service_healthy }
+    environment:
+      TZ: America/Lima
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Falta POSTGRES_PASSWORD en el archivo .env}
+      SGP_BACKUP_HORA: ${SGP_BACKUP_HORA:-03:00}      # hora de Lima a la que se hace la copia diaria
+      SGP_BACKUP_DIAS: ${SGP_BACKUP_DIAS:-14}         # cuántos días se conservan
+    volumes:
+      - ./docker/backup/backup.sh:/backup.sh:ro
+      - ${SGP_BACKUP_CARPETA:-./backups}:/backups
+    healthcheck:
+      # Sano = existe una copia de las últimas 26 horas. Si falla, "docker compose ps" lo marca "unhealthy".
+      test: ["CMD-SHELL", "find /backups -maxdepth 1 -name 'sgp-*' -mmin -1560 | grep -q ."]
+      interval: 30m
+      timeout: 10s
+      retries: 1
+      start_period: 10m
+    logging: *logs
+
+volumes:
+  caddy_data:
+  caddy_config:

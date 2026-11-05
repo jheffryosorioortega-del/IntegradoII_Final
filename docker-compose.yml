@@ -1,0 +1,192 @@
+# SGP en Docker: PostgreSQL + los 5 servicios. Todo con un solo comando:
+#
+#     docker compose up -d --build        (la primera vez tarda varios minutos: descarga imágenes y compila)
+#     http://localhost:8090               (portal)  ·  http://localhost:8090/panel  (panel)
+#     docker compose down                 (apaga; los datos se conservan)   ·   docker compose down -v   (apaga y BORRA los datos)
+#
+# Las claves salen del archivo .env de esta carpeta (el mismo que usa IntelliJ). Si falta alguna, Compose se detiene
+# y dice cuál. Nada de eso se mete dentro de las imágenes: llega como variable de entorno al arrancar.
+
+name: sgp
+
+# Ajustes comunes de los servicios Java: hora de Lima (los avisos «hace 5 min» y las fechas del panel salen en hora de
+# Perú, no en UTC) y un tope de memoria para que 5 JVM no se coman el equipo.
+x-java: &java
+  JAVA_TOOL_OPTIONS: "-Duser.timezone=America/Lima -XX:MaxRAMPercentage=70"
+  TZ: America/Lima
+
+services:
+
+  # ---------- Base de datos: un motor, tres bases (una por microservicio) ----------
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Falta POSTGRES_PASSWORD en el archivo .env}
+      # Las claves de cada servicio entran solo para que init-bases.sh cree sus usuarios la primera vez.
+      USUARIOS_DB_PASSWORD: ${USUARIOS_DB_PASSWORD:?Falta USUARIOS_DB_PASSWORD en el archivo .env}
+      CLIENTES_DB_PASSWORD: ${CLIENTES_DB_PASSWORD:?Falta CLIENTES_DB_PASSWORD en el archivo .env}
+      SOLICITUDES_DB_PASSWORD: ${SOLICITUDES_DB_PASSWORD:?Falta SOLICITUDES_DB_PASSWORD en el archivo .env}
+      TZ: America/Lima
+    volumes:
+      - sgp_pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init-bases.sh:/docker-entrypoint-initdb.d/10-init-bases.sh:ro
+    # Solo para que puedas mirar las bases con pgAdmin o DBeaver desde tu PC (127.0.0.1 = nadie más en la red).
+    # Usa el 5433 porque el 5432 suele estar ocupado por un PostgreSQL instalado en Windows.
+    ports:
+      - "127.0.0.1:${SGP_PG_PUBLISH_PORT:-5433}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # ---------- Microservicios (solo hablan entre ellos por la red interna: ningún puerto se publica) ----------
+  ms-usuarios:
+    build:
+      context: ./ms-usuarios
+      dockerfile: ../docker/Dockerfile
+      args: { PORT: "8081" }
+    image: sgp/ms-usuarios:dev
+    restart: unless-stopped
+    mem_limit: 512m
+    depends_on:
+      postgres: { condition: service_healthy }
+    environment:
+      <<: *java
+      SGP_DB_HOST: postgres
+      SGP_DB_PORT: "5432"
+      USUARIOS_DB_PASSWORD: ${USUARIOS_DB_PASSWORD}
+      SGP_API_KEY: ${SGP_API_KEY:?Falta SGP_API_KEY en el archivo .env}
+      SGP_JWT_SECRET: ${SGP_JWT_SECRET:?Falta SGP_JWT_SECRET en el archivo .env}
+      # Contraseña de los 3 usuarios iniciales (solo se usa si la tabla de usuarios está vacía).
+      SGP_SEED_PASSWORD: ${SGP_SEED_PASSWORD:?Falta SGP_SEED_PASSWORD en el archivo .env}
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8081'"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 40s
+
+  ms-clientes:
+    build:
+      context: ./ms-clientes
+      dockerfile: ../docker/Dockerfile
+      args: { PORT: "8082" }
+    image: sgp/ms-clientes:dev
+    restart: unless-stopped
+    mem_limit: 512m
+    depends_on:
+      postgres: { condition: service_healthy }
+    environment:
+      <<: *java
+      SGP_DB_HOST: postgres
+      SGP_DB_PORT: "5432"
+      CLIENTES_DB_PASSWORD: ${CLIENTES_DB_PASSWORD}
+      SGP_API_KEY: ${SGP_API_KEY:?Falta SGP_API_KEY en el archivo .env}
+      # Consulta DNI/RUC (opcionales: sin ellas el formulario deja escribir los datos a mano).
+      DECOLECTA_TOKEN: ${DECOLECTA_TOKEN:-}
+      SGP_DNI_INTERNAL_KEY: ${SGP_DNI_INTERNAL_KEY:-}
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8082'"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 40s
+
+  ms-solicitudes:
+    build:
+      context: ./ms-solicitudes
+      dockerfile: ../docker/Dockerfile
+      args: { PORT: "8083" }
+    image: sgp/ms-solicitudes:dev
+    restart: unless-stopped
+    mem_limit: 768m     # recibe fotos de hasta 28 MB por envío
+    depends_on:
+      postgres: { condition: service_healthy }
+      ms-usuarios: { condition: service_healthy }
+      ms-clientes: { condition: service_healthy }
+    environment:
+      <<: *java
+      SGP_DB_HOST: postgres
+      SGP_DB_PORT: "5432"
+      SOLICITUDES_DB_PASSWORD: ${SOLICITUDES_DB_PASSWORD}
+      SGP_API_KEY: ${SGP_API_KEY:?Falta SGP_API_KEY en el archivo .env}
+      # Llamadas directas entre servicios (no pasan por el Gateway); en Docker se llaman por el nombre del servicio.
+      CLIENTES_URL: http://ms-clientes:8082
+      USUARIOS_URL: http://ms-usuarios:8081
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8083'"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 40s
+
+  # ---------- Puerta de entrada ----------
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: ../docker/Dockerfile
+      args: { PORT: "8080" }
+    image: sgp/gateway:dev
+    restart: unless-stopped
+    mem_limit: 512m
+    depends_on:
+      ms-usuarios: { condition: service_healthy }
+      ms-clientes: { condition: service_healthy }
+      ms-solicitudes: { condition: service_healthy }
+    environment:
+      <<: *java
+      USUARIOS_URL: http://ms-usuarios:8081
+      CLIENTES_URL: http://ms-clientes:8082
+      SOLICITUDES_URL: http://ms-solicitudes:8083
+      SGP_API_KEY: ${SGP_API_KEY:?Falta SGP_API_KEY en el archivo .env}
+      SGP_JWT_SECRET: ${SGP_JWT_SECRET:?Falta SGP_JWT_SECRET en el archivo .env}
+    # Para probar el Gateway desde tu PC (por ejemplo con pruebas/ms_pruebas.py), quita el # de las dos líneas siguientes.
+    # Solo se abre hacia tu propio equipo; no lo expongas a internet.
+    # ports:
+    #   - "127.0.0.1:8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8080'"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 40s
+
+  # ---------- Portal público + panel: lo único que se abre al navegador ----------
+  ms-frontend:
+    build:
+      context: ./ms-frontend
+      dockerfile: ../docker/Dockerfile
+      args: { PORT: "8090" }
+    image: sgp/ms-frontend:dev
+    restart: unless-stopped
+    mem_limit: 768m
+    depends_on:
+      gateway: { condition: service_healthy }
+    ports:
+      - "8090:8090"
+    environment:
+      <<: *java
+      GATEWAY_URL: http://gateway:8080
+      SGP_API_KEY: ${SGP_API_KEY:?Falta SGP_API_KEY en el archivo .env}
+      SGP_DNI_INTERNAL_KEY: ${SGP_DNI_INTERNAL_KEY:-}
+      # Detrás de un proxy con HTTPS (Caddy, nginx) ponlas en true / native en el .env del servidor:
+      # la cookie de sesión pasa a ser "Secure" y se toma la IP real del visitante para los límites.
+      SGP_COOKIE_SECURE: ${SGP_COOKIE_SECURE:-false}
+      SGP_FORWARD_HEADERS: ${SGP_FORWARD_HEADERS:-none}
+      # Topes contra abuso (ver README, «Seguridad aplicada»). Sin proxy, todos los visitantes comparten IP:
+      # para una demostración con muchas pruebas seguidas súbelos en el .env.
+      SGP_LIMITES_ENVIOS_POR_IP: ${SGP_LIMITES_ENVIOS_POR_IP:-8}
+      SGP_LIMITES_LOGIN_FALLOS_POR_IP: ${SGP_LIMITES_LOGIN_FALLOS_POR_IP:-10}
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8090'"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 40s
+
+volumes:
+  # Aquí viven los datos de las 3 bases. Sobrevive a "docker compose down"; solo "down -v" lo borra.
+  sgp_pgdata:

@@ -1,0 +1,25 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: ms-clientes
+  config:
+    # Las claves de las bases de datos se leen de un archivo .env (no se sube a GitHub).
+    import:
+      - optional:file:./.env[.properties]
+      - optional:file:../.env[.properties]
+
+  # Todo el sistema usa un solo motor: PostgreSQL. Cada microservicio tiene su propia base.
+  # Host y puerto salen de SGP_DB_HOST y SGP_DB_PORT (.env); por defecto localhost:5432.
+  datasource:
+    url: jdbc:postgresql://${SGP_DB_HOST:localhost}:${SGP_DB_PORT:5432}/${CLIENTES_DB_NAME:sgp_clientes}
+    username: ${CLIENTES_DB_USER:sgp_clientes_app}
+    password: ${CLIENTES_DB_PASSWORD}
+  jpa:
+    hibernate:
+      # El esquema lo crea Flyway; Hibernate solo comprueba que coincida con las entidades.
+      ddl-auto: ${JPA_DDL_AUTO:validate}
+    open-in-view: false
+  flyway:
+    locations: classpath:db/migration/postgresql

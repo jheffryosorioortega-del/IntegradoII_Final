@@ -1,0 +1,39 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: ms-solicitudes
+  servlet:
+    multipart:
+      # Fotos de evidencia: hasta 6 MB cada una y 28 MB por envío.
+      max-file-size: 6MB
+      max-request-size: 28MB
+  config:
+    # Las claves de las bases de datos se leen de un archivo .env (no se sube a GitHub).
+    import:
+      - optional:file:./.env[.properties]
+      - optional:file:../.env[.properties]
+
+  # Todo el sistema usa un solo motor: PostgreSQL. Cada microservicio tiene su propia base.
+  # Host y puerto salen de SGP_DB_HOST y SGP_DB_PORT (.env); por defecto localhost:5432.
+  datasource:
+    url: jdbc:postgresql://${SGP_DB_HOST:localhost}:${SGP_DB_PORT:5432}/${SOLICITUDES_DB_NAME:sgp_solicitudes}
+    username: ${SOLICITUDES_DB_USER:sgp_solicitudes_app}
+    password: ${SOLICITUDES_DB_PASSWORD}
+  jpa:
+    hibernate:
+      # El esquema lo crea Flyway; Hibernate solo comprueba que coincida con las entidades.
+      ddl-auto: ${JPA_DDL_AUTO:validate}
+    open-in-view: false
+  flyway:
+    locations: classpath:db/migration/postgresql
+
+# Comunicacion directa entre microservicios (NO pasa por el Gateway):
+# el Gateway es la puerta de entrada para clientes externos (el Front-End),
+# no para el trafico interno entre servicios.
+sgp:
+  clientes:
+    url: ${CLIENTES_URL:http://localhost:8082}
+  usuarios:
+    url: ${USUARIOS_URL:http://localhost:8081}
