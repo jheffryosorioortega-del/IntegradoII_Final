@@ -2,7 +2,7 @@
 // Cada usuario virtual (VU) hace lo que haria una persona: abre la pagina, lee el formulario,
 // lo llena (pausa) y lo envia. Se mide el tiempo de cada paso y si la solicitud quedo registrada.
 //
-// Perfiles (variable PERFIL):  humo = 2 usuarios 20 s | carga = 100 usuarios | estres = hasta 250
+// Perfiles (variable PERFIL):  humo = 2 usuarios 20 s | carga = 100 usuarios | carga300 = 300 usuarios | estres = hasta 250
 import http from 'k6/http';
 import { check, group, sleep } from 'k6';
 import { Rate, Trend, Counter } from 'k6/metrics';
@@ -18,6 +18,14 @@ const perfiles = {
     stages: [
       { duration: '1m', target: 100 },   // sube de 0 a 100 clientes
       { duration: '3m', target: 100 },   // mantiene 100 clientes a la vez
+      { duration: '30s', target: 0 },    // baja
+    ],
+  },
+  carga300: {
+    executor: 'ramping-vus', startVUs: 0, gracefulRampDown: '15s',
+    stages: [
+      { duration: '2m', target: 300 },   // sube de 0 a 300 clientes
+      { duration: '3m', target: 300 },   // mantiene 300 clientes a la vez
       { duration: '30s', target: 0 },    // baja
     ],
   },
