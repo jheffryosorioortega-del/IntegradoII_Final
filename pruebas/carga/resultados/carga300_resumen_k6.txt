@@ -1,0 +1,40 @@
+  ... THRESHOLDS 
+    http_req_duration{paso:enviar}
+    .. 'p(95)<2000' p(95)=160.18ms
+    http_req_duration{paso:formulario}
+    .. 'p(95)<1000' p(95)=98.44ms
+    http_req_failed
+    .. 'rate<0.01' rate=0.00%
+    solicitud_registrada
+    .. 'rate>0.99' rate=100.00%
+  ... TOTAL RESULTS 
+    checks_total.......: 25056   72.652602/s
+    checks_succeeded...: 100.00% 25056 out of 25056
+    checks_failed......: 0.00%   0 out of 25056
+    .. inicio 200
+    .. formulario 200
+    .. token CSRF encontrado
+    .. envio 200
+    .. muestra codigo SOL-
+    CUSTOM
+    solicitud_registrada...........: 100.00% 5007 out of 5007
+    solicitudes_creadas............: 5007    14.518342/s
+    tiempo_envio_solicitud.........: avg=34.33ms min=4.19ms med=8.33ms  max=4.88s  p(90)=29.94ms p(95)=81.28ms 
+    HTTP
+    http_req_duration..............: avg=53.35ms min=4.19ms med=13.69ms max=4.94s  p(90)=55.22ms p(95)=132.51ms
+      { expected_response:true }...: avg=53.35ms min=4.19ms med=13.69ms max=4.94s  p(90)=55.22ms p(95)=132.51ms
+      { paso:enviar }..............: avg=61.04ms min=4.19ms med=15.98ms max=4.88s  p(90)=65.27ms p(95)=160.18ms
+      { paso:formulario }..........: avg=49.91ms min=6.91ms med=13.59ms max=4s     p(90)=49.74ms p(95)=98.44ms 
+    http_req_failed................: 0.00%   0 out of 20042
+    http_reqs......................: 20042   58.113963/s
+    EXECUTION
+    iteration_duration.............: avg=15.7s   min=8.18s  med=15.72s  max=24.53s p(90)=19.85s  p(95)=20.64s  
+    iterations.....................: 4986    14.45745/s
+    vus............................: 2       min=2            max=300
+    vus_max........................: 300     min=300          max=300
+    NETWORK
+    data_received..................: 236 MB  685 kB/s
+    data_sent......................: 4.6 MB  13 kB/s
+running (5m44.9s), 000/300 VUs, 4986 complete and 28 interrupted iterations
+clientes .. [ 100% ] 000/300 VUs  5m30s
+TERMINADO 20:00:27
